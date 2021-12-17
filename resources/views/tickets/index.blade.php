@@ -48,19 +48,19 @@
                     @endif
                 </div>
                 <div class="form-group col-2">
-                    <label for="startingD">Data Ticket da ...</label>
-                    @if (old('startingD'))
-                        <input type="date" name="startingD" value="{{ old('startingD') }}" class="form-control">
+                    <label for="startingDR">Data Ticket da ...</label>
+                    @if (old('startingDR'))
+                        <input type="date" name="startingDR" value="{{ old('startingDR') }}" class="form-control">
                     @else 
-                        <input type="date" name="startingD" value="{{ $startingD ?? '' }}" class="form-control">
+                        <input type="date" name="startingDR" value="{{ $startingDR ?? '' }}" class="form-control">
                     @endif
                 </div>
                 <div class="form-group col-2">
-                    <label for="endingD">Data Ticket a ...</label>
-                    @if (old('endingD'))
-                        <input type="date" name="endingD" value="{{ old('endingD') }}" class="form-control">
+                    <label for="endingDR">Data Ticket a ...</label>
+                    @if (old('endingDR'))
+                        <input type="date" name="endingDR" value="{{ old('endingDR') }}" class="form-control">
                     @else 
-                        <input type="date" name="endingD" value="{{ $endingD ?? '' }}" class="form-control">
+                        <input type="date" name="endingDR" value="{{ $endingDR ?? '' }}" class="form-control">
                     @endif
                 </div>
                 <div class="form-group col-2">

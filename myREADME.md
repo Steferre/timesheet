@@ -1,4 +1,4 @@
-## Aggiornato in data 16/12/2021
+## Aggiornato in data 17/12/2021
 
 ## contracts views
 index  ok
@@ -41,10 +41,9 @@ per nome centro di costo (solo lato admin in quanto l'user non vede le aziende c
 - aggiungere sezione per effettuare il filtro nella zona dei ticket
 per nome contratto, per range di data, per azienda cliente lato admin e lato user
 - aggiunto anche filtro per centri di costo
-##  DA FARE
 - continuare a riscrivere la funzione index del ContractController per il caso dell'user, con lo schema usato per la funione index del TicketController
 - filtro data in range, che lavora sulla data chiusura
-## DA ESPORTARE
+##  DA FARE (EXPORT)
 - elenco contratti filtrati per cliente(es lyve)
 - nello show di un contratto vedo anche i ticket legati a quel contratto e volendo potrei esportarli
 - nel file excel l'amministratore azienda gruppo azienda cliente contratto di riferimento e ticket legati al contratto

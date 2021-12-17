@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use Maatwebsite\Excel\Facades\Excel;
+
+
 class TicketController extends Controller
 {
     /**
@@ -28,7 +31,7 @@ class TicketController extends Controller
         $dff = $request->only([
             'contractN',
             'startingDR',
-            'endingD',
+            'endingDR',
             'searchedC',
             'searchedCDC',
         ]);
@@ -56,10 +59,10 @@ class TicketController extends Controller
 
             } else if (count($dff) > 0) {
 
-                // filtri attivati endingD
+                // filtri attivati endingDR
                 $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
                 $startingDR = isset($dff['startingDR']) ? $dff['startingDR'] : null;
-                $endingD = isset($dff['endingD']) ? $dff['endingD'] : null;
+                $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
                 /* echo '<pre>';
@@ -80,7 +83,7 @@ class TicketController extends Controller
                 if ($startingDR) {
                     $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
                 }
-                if ($endingD) {
+                if ($endingDR) {
                     $tickets = $tickets->where('tickets.end_date', '<=', $endingDR);
                 }
                 if ($contractN) {
@@ -103,6 +106,7 @@ class TicketController extends Controller
                         'clients' => $clients,
                         'contractN' => $contractN,
                         'startingDR' => $startingDR,
+                        'endingDR' => $endingDR,
                         'searchedC' => $searchedC,
                         'searchedCDC' => $searchedCDC,
                         'cdcs' => $cdcs,
@@ -160,6 +164,7 @@ class TicketController extends Controller
                 // ci sono i filtri
                 $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
                 $startingDR = isset($dff['startingDR']) ? $dff['startingDR'] : null;
+                $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
                /*  echo '<pre>';
@@ -176,7 +181,10 @@ class TicketController extends Controller
                 echo '</pre>';
                 die(); */
                 if ($startingDR) {
-                    $tickets = $tickets->where('tickets.start_date', '>=', $startingDR);
+                    $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
+                }
+                if ($endingDR) {
+                    $tickets = $tickets->where('tickets.end_date', '<=', $endingDR);
                 }
                 if ($contractN) {
                     $tickets = $tickets->where('contracts.name', 'like', '%'.$contractN.'%');
@@ -198,6 +206,7 @@ class TicketController extends Controller
                         'clients' => $clients,
                         'contractN' => $contractN,
                         'startingDR' => $startingDR,
+                        'endingDR' => $endingDR,
                         'searchedC' => $searchedC,
                         'searchedCDC' => $searchedCDC,
                         'cdcs' => $cdcs,
@@ -618,6 +627,25 @@ class TicketController extends Controller
             return back()->with("warning", "Non puoi eliminare il ticket selezionato, in quanto non sei tu l'autore dell'intervento!");
 
         }
+
+    }
+
+    public function export(Request $request) {
+
+        $params = [];
+        $name = isset($request['q_name']) ? ($request['q_name']!=='' ? $request['q_name'] : null) : null;
+        $group = isset($request['q_group']) ? ($request['q_group']!=='' ? $request['q_group'] : null) : null;
+        $bool = isset($request['q_bool']) ? ($request['q_bool']!=='' ? $request['q_bool'] : null) : null;
+        if ($name) $params[] = ['name', 'like', '%'.$name.'%'];
+        if ($group) $params[] = ['group', 'like', '%'.$group.'%'];
+        if ($bool !== null) $params[] = ['active', $bool];
+
+        $promoters = Promoter::join('users', 'users.id', '=', 'promoters.userId')
+            ->select('users.name as nominativo', 'users.email as email1', 'promoters.*')
+            ->where($params)
+            ->get();
+
+        return Excel::download(new PromotersExport($promoters), 'promoters.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
     }
 }
