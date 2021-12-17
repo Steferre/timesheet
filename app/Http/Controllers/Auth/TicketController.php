@@ -648,12 +648,29 @@ class TicketController extends Controller
         $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
         $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
 
-        $tickets = Ticket::join('contracts', 'contracts.id', '=', 'tickets.contract_id')
-            ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
-            ->join('clients', 'clients.id', '=', 'contracts.client_id')
-            ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
-                     'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy');
+        if (Auth::user()['role'] == 'admin') {// admin
+
+            $tickets = Ticket::join('contracts', 'contracts.id', '=', 'tickets.contract_id')
+                            ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
+                            ->join('clients', 'clients.id', '=', 'contracts.client_id')
+                            ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
+                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
+                                    'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy');
+            
+        } else {// user normale
+            $emailPath = explode('@', Auth::user()['email']);
+            $company = explode('.', $emailPath[1]);
+            $companyName = $company[0]; // esempio: keyos
+            
+            $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')
+                            ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
+                            ->join('clients', 'clients.id', '=', 'contracts.client_id')
+                            ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
+                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
+                                    'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy')
+                            ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
+            
+        }
 
         if ($startingDR) {
             $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
