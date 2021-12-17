@@ -45,6 +45,7 @@ Route::delete('/clients/{id}', [ClientController::class, 'destroy'])->middleware
 Route::get('/tickets', [TicketController::class, 'index'])->middleware(['auth'])->name('tickets.index');
 Route::post('/tickets', [TicketController::class, 'store'])->middleware(['auth'])->name('tickets.store');
 Route::get('/tickets/create', [TicketController::class, 'create'])->middleware(['auth'])->name('tickets.create');
+Route::get('/tickets/export', [TicketController::class, 'export'])->middleware(['auth'])->name('tickets.export');
 Route::get('/tickets/{id}', [TicketController::class, 'show'])->middleware(['auth'])->name('tickets.show');
 Route::patch('/tickets/{id}', [TicketController::class, 'update'])->middleware(['auth'])->name('tickets.update');
 Route::get('/tickets/{id}/edit', [TicketController::class, 'edit'])->middleware(['auth'])->name('tickets.edit');

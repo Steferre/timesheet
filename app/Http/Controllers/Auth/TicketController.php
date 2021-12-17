@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Exports\TicketsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -632,20 +633,47 @@ class TicketController extends Controller
 
     public function export(Request $request) {
 
+        $dff = $request->only([
+            'contractN',
+            'startingDR',
+            'endingDR',
+            'searchedC',
+            'searchedCDC',
+        ]);
+
         $params = [];
-        $name = isset($request['q_name']) ? ($request['q_name']!=='' ? $request['q_name'] : null) : null;
-        $group = isset($request['q_group']) ? ($request['q_group']!=='' ? $request['q_group'] : null) : null;
-        $bool = isset($request['q_bool']) ? ($request['q_bool']!=='' ? $request['q_bool'] : null) : null;
-        if ($name) $params[] = ['name', 'like', '%'.$name.'%'];
-        if ($group) $params[] = ['group', 'like', '%'.$group.'%'];
-        if ($bool !== null) $params[] = ['active', $bool];
+        $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
+        $startingDR = isset($dff['startingDR']) ? $dff['startingDR'] : null;
+        $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
+        $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
+        $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
 
-        $promoters = Promoter::join('users', 'users.id', '=', 'promoters.userId')
-            ->select('users.name as nominativo', 'users.email as email1', 'promoters.*')
-            ->where($params)
-            ->get();
+        $tickets = Ticket::join('contracts', 'contracts.id', '=', 'tickets.contract_id')
+            ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
+            ->join('clients', 'clients.id', '=', 'contracts.client_id')
+            ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
+            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
+                     'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy');
 
-        return Excel::download(new PromotersExport($promoters), 'promoters.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        if ($startingDR) {
+            $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
+        }
+        if ($endingDR) {
+            $tickets = $tickets->where('tickets.end_date', '<=', $endingDR);
+        }
+        if ($contractN) {
+            $tickets = $tickets->where('contracts.name', 'like', '%'.$contractN.'%');
+        }
+        if ($searchedC) {
+            $tickets = $tickets->where('contracts.client_id', $searchedC);
+        }
+        if ($searchedCDC) {
+            $tickets = $tickets->where('contracts.client_id', $searchedCDC);
+        }
+
+        $tickets = $tickets->get();
+
+        return Excel::download(new TicketsExport($tickets), 'tickets.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
     }
 }

@@ -101,6 +101,16 @@
                 </div>
             </div>   
         </form>
+        <!--FORM PER L'EXPORT-->
+        <form action="{{ route('tickets.export') }}" method="GET">
+            @csrf
+            <input type="hidden" name="contractN" value="{{ $contractN ?? '' }}">
+            <input type="hidden" name="startingDR" value="{{ $startingDR ?? '' }}">
+            <input type="hidden" name="endingDR" value="{{ $endingDR ?? '' }}">
+            <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
+            <input type="hidden" name="searchedCDC" value="{{ $searchedCDC ?? '' }}">
+            <button type="submit" class="btn btn-info">Scarica dati</button>
+        </form>
     </div>
 @stop
 
