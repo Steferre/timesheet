@@ -99,18 +99,21 @@
                     <button type="submit" class="btn btn-primary">FILTRA</button>
                     <a href="{{ route('tickets.index') }}" class="btn btn-secondary ml-3" role="button">ANNULLA FILTRO</a>
                 </div>
+                <div class="offset-6"></div>
             </div>   
         </form>
-        <!--FORM PER L'EXPORT-->
-        <form action="{{ route('tickets.export') }}" method="GET">
-            @csrf
-            <input type="hidden" name="contractN" value="{{ $contractN ?? '' }}">
-            <input type="hidden" name="startingDR" value="{{ $startingDR ?? '' }}">
-            <input type="hidden" name="endingDR" value="{{ $endingDR ?? '' }}">
-            <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
-            <input type="hidden" name="searchedCDC" value="{{ $searchedCDC ?? '' }}">
-            <button type="submit" class="btn btn-info">Scarica dati</button>
-        </form>
+        <div class="form-group col-3">
+            <!--FORM PER L'EXPORT-->
+            <form action="{{ route('tickets.export') }}" method="GET">
+                @csrf
+                <input type="hidden" name="contractN" value="{{ $contractN ?? '' }}">
+                <input type="hidden" name="startingDR" value="{{ $startingDR ?? '' }}">
+                <input type="hidden" name="endingDR" value="{{ $endingDR ?? '' }}">
+                <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
+                <input type="hidden" name="searchedCDC" value="{{ $searchedCDC ?? '' }}">
+                <button type="submit" class="btn btn-info">Scarica dati</button>
+            </form>
+        </div>
     </div>
 @stop
 

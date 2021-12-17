@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Exports\ContractsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ContractController extends Controller
 {
     /**
@@ -30,7 +33,7 @@ class ContractController extends Controller
         /* echo '<pre>';
         var_dump($dff);
         echo '</pre>';
-        die();   */  
+        die();*/  
         // se sono admin posso vedere tutti i contratti
         if ($loggedUser['role'] == 'admin') {
 
@@ -327,6 +330,56 @@ class ContractController extends Controller
         } else {
             return back()->with('warning', 'Attenzione! Il contratto ' . $contract->name . ' presenta dei ticket attivi! Non può essere eliminato.');
         }
+
+    }
+
+    public function exportCON(Request $request)
+    {
+        $dff = $request->only([
+            'searchedC',
+            'searchedS',
+        ]);
+
+        $contracts = Contract::join('clients', 'contracts.client_id', '=', 'clients.id')
+                                    ->join('tycoon_group_companies', 'contracts.company_id', '=', 'tycoon_group_companies.id')
+                                    ->join('tickets', 'contracts.id', '=', 'tickets.contract_id')
+                                    ->select('contracts.name', 'contracts.uniCode',
+                                    'contracts.start_date','contracts.end_date',
+                                    'contracts.totHours', DB::raw("SUM(tickets.workTime + tickets.extraTime) as hours"),
+                                    DB::raw("ROUND((SUM(tickets.workTime + tickets.extraTime)/contracts.totHours)*100) as perc_ore_utiizzate"),
+                                    'tycoon_group_companies.businessName as Società del gruppo',
+                                    'clients.businessName as Azienda Cliente', 'contracts.description')
+                                    ->groupBy('contracts.id');
+
+        if (Auth::user()['role'] == 'admin') {
+
+            $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
+            $searchedS = isset($dff['searchedS']) ? strtolower($dff['searchedS']) : null;
+
+            if ($searchedC) {
+                $contracts = $contracts->where('clients.id', $searchedC);
+            }
+            if ($searchedS) {
+                $contracts = $contracts->where('tycoon_group_companies.id', $searchedS);
+            }
+
+        } else {
+            // accesso come user normale
+            $userMail = explode('@', Auth::user()['email']);
+            $company = explode('.', $userMail[1]);
+            $companyName  = $company[0];
+
+            $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
+
+            if ($searchedC) {
+                $contracts = $contracts->where('clients.id', $searchedC);
+            }
+
+        }
+
+        $contracts = $contracts->get();
+
+        return Excel::download(new ContractsExport($contracts), 'contracts.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
     }
 

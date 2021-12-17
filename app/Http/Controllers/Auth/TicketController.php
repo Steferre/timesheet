@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\TicketsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-
 class TicketController extends Controller
 {
     /**

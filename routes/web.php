@@ -24,6 +24,7 @@ use App\Http\Controllers\Auth\TicketController;
 Route::get('/', [ContractController::class, 'index'])->middleware(['auth'])->name('contracts.index');
 Route::post('/contracts', [ContractController::class, 'store'])->middleware(['auth'])->name('contracts.store');
 Route::get('/contracts/create', [ContractController::class, 'create'])->middleware(['auth'])->name('contracts.create');
+Route::get('/contracts/exportCON', [ContractController::class, 'exportCON'])->middleware(['auth'])->name('contracts.exportCON');
 Route::get('/contracts/{id}', [ContractController::class, 'show'])->middleware(['auth'])->name('contracts.show');
 Route::patch('/contracts/{id}', [ContractController::class, 'update'])->middleware(['auth'])->name('contracts.update');
 Route::get('/contracts/{id}/edit', [ContractController::class, 'edit'])->middleware(['auth'])->name('contracts.edit');

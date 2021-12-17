@@ -71,7 +71,19 @@
                     <button type="submit" class="btn btn-primary ml-3">FILTRA</button>
                     <a href="{{ route('contracts.index') }}" class="btn btn-secondary ml-3" role="button">ANNULLA FILTRO</a>
                 </div>
+                <div class="offset-1"></div>
+                <div class="form-group col-2">
+                </div>
             </div>
+        </form>
+        <!--FORM PER L'EXPORT-->
+        <form action="{{ route('contracts.exportCON') }}" method="GET">
+            @csrf
+            <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
+            @if (Auth::user()['role'] == 'admin')
+                <input type="hidden" name="searchedS" value="{{ $searchedS ?? '' }}">
+            @endif
+            <button type="submit" class="btn btn-info">Scarica dati</button>
         </form>
     </div>
 @stop

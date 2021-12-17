@@ -47,3 +47,6 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - elenco contratti filtrati per cliente(es lyve)
 - nello show di un contratto vedo anche i ticket legati a quel contratto e volendo potrei esportarli
 - nel file excel l'amministratore azienda gruppo azienda cliente contratto di riferimento e ticket legati al contratto
+## IPOTESI
+- se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
+(introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
