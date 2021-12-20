@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@php
+$getParams = $_GET;
+@endphp
 @section('scripts')
     <script>
         function confirmDelete() {
@@ -157,7 +159,7 @@
                             </a>
                         </td>
                         <td title="Dettaglio">
-                            <a href="{{ route('tickets.show', $ticket->id) }}">
+                            <a href="{{ route('tickets.show', ['id' => $ticket->id, 'getParams' => $getParams]) }}">
                                 <i class="bi bi-box-arrow-right"></i>
                             </a>
                         </td>
@@ -195,5 +197,9 @@
             @endforeach
         </tbody>
     </table>
-    {{ $tickets->links() }}
+    {{ $tickets->appends(['contractN' => $contractN ?? "",
+        'startingDR' => $startingDR ?? "",
+        'endingDR' => $endingDR ?? "",
+        'searchedC' => $searchedC ?? "",
+        'searchedCDC' => $searchedCDC ?? ""])->links() }}
 @stop

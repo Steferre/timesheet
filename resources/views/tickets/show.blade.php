@@ -1,5 +1,19 @@
 @extends('layouts.app')
-
+@php
+$query = null;
+if (isset($data['getParams'])){
+    $token = isset($data['getParams']['_token']) ? $data['getParams']['_token'] : null;
+    $contractN = $data['getParams']['contractN'];
+    $startingDR = $data['getParams']['startingDR'];
+    $endingDR = $data['getParams']['endingDR'];
+    $searchedC = $data['getParams']['searchedC'];
+    $searchedCDC = $data['getParams']['searchedCDC'];
+    $page = isset($data['getParams']['page']) ? $data['getParams']['page'] : null;
+    $query= '?_token='. $token .'&contractN='.$contractN.'&startingDR='.$startingDR.'&endingDR='.$endingDR.'&searchedC='.$searchedC.'&searchedCDC='.$searchedCDC.'&page='.$page;
+} else {
+    $query;
+}
+@endphp
 @section('scripts')
     <script>
         function confirmDelete() {
@@ -20,7 +34,7 @@
     <h1 class="text-center">Dettaglio Ticket</h1>
     <div class="d-flex justify-content-around py-2">
         <div title="lista ticket">
-            <a href="{{ route('tickets.index') }}" class="btn btn-primary" role="button">
+            <a href="{{ route('tickets.index').$query }}" class="btn btn-primary" role="button">
                 <i class="bi bi-box-arrow-left"></i>
             </a>
         </div>

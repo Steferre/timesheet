@@ -47,10 +47,10 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - nello show di un contratto vedo anche i ticket legati a quel contratto e volendo potrei esportarli
 - nel file excel l'amministratore azienda gruppo azienda cliente contratto di riferimento e ticket legati al contratto
 - se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi
-##  DA FARE (EXPORT)
+- paginazione in tutte le view
+##  DA FARE
+- per la paginazione verificare, che quando si torna indietro, si torni alla pagina dalla quale si è andati al dettaglio
 ## IPOTESI
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
 ## DA AGGIUNGERE
-- paginazione in tutte le view
-

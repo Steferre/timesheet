@@ -462,11 +462,12 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $data =  $request->all();
         $ticket = Ticket::findOrFail($id);
-
-        return view('tickets.show', ['ticket' => $ticket]);
+ 
+        return view('tickets.show', ['ticket' => $ticket, 'data' => $data]);
     }
 
     /**
