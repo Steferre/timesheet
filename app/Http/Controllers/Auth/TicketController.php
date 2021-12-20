@@ -258,6 +258,19 @@ class TicketController extends Controller
 
             $contract = Contract::where('slug', $data['slug'])->first();
 
+            /* echo '<pre>';
+            print_r($contract);
+            echo '<pre>'; */
+
+
+            // prima di dispensare la view che permette la creazione del ticket
+            // verificare che il contratto sia attivo
+            if ($contract['active'] == 'N') {
+
+                return back()->with("warning", "IMPOSSIBILE aggiungere ticket, in quanto il contratto NON è attivo!!!");
+
+            }
+
             $companyName = strtolower(explode(' ', $contract->tycoonGroupCompany->businessName)[0]);
 
             $users = User::where('email', 'like', '%'. $companyName .'%')->get();
@@ -282,8 +295,8 @@ class TicketController extends Controller
         } else {
             
             if (count($_GET) == 0 && Auth::user()['role'] == 'admin') {
-                // passo tutta la lista dei contratti
-                $contracts = Contract::all();
+                // passo la lista di tutti i contratti attivi
+                $contracts = Contract::where('active', 'Y')->get();
 
                 return view('tickets.create', [
                     'contracts' => $contracts,
@@ -292,15 +305,16 @@ class TicketController extends Controller
                     'cdcs' => $cdcs,
                 ]);
             } else if (count($_GET) == 0 && Auth::user()['role'] == 'user') {
-                // devo far scegliere solo tra i contratti aperti dall'azienda di appartenenza dell'user
+                // devo far scegliere solo tra i contratti aperti dall'azienda di appartenenza dell'user e che sono attivi
 
                 $contracts = Contract::join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                                         ->select('contracts.*')
                                         ->where('tycoon_group_companies.businessName', 'like', '%'. $activeUserCompanyName .'%')
+                                        ->where('contracts.active', 'Y')
                                         ->get();
 
                 /* echo '<pre>';
-                print_r($contracts);
+                echo 'numero di contratti attivi: ' . count($contracts);
                 echo '<pre>';
                 die(); */
                 return view('tickets.create', [

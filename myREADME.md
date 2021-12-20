@@ -50,3 +50,6 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 ## IPOTESI
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
+
+## DA AGGIUNGERE 
+se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi
