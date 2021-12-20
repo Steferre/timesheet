@@ -195,4 +195,5 @@
             @endforeach
         </tbody>
     </table>
+    {{ $contracts->links() }}
 @stop

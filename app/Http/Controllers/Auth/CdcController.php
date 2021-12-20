@@ -19,7 +19,7 @@ class CdcController extends Controller
         
         if(!isset($dff['searchedC'])) {
 
-            $cdcs = Cdc::all();
+            $cdcs = Cdc::paginate(10);
 
             return view('cdcs.index', ['cdcs' => $cdcs]);
 
@@ -27,7 +27,7 @@ class CdcController extends Controller
 
             $query = $dff['searchedC'];
 
-            $cdcs = Cdc::where('businessName', 'like', $query.'%')->get();
+            $cdcs = Cdc::where('businessName', 'like', $query.'%')->paginate(10);
 
             if (count($cdcs) > 0) {
                 // trovati risultati e/o risultato

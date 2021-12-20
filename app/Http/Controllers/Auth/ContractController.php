@@ -43,7 +43,7 @@ class ContractController extends Controller
             if (count($dff) == 0) {
                 // faccio vedere tutto
                 // filtri non attivi
-                $contracts = Contract::all();
+                $contracts = Contract::paginate(10);
                 
                 $numContratti = count($contracts);
                 
@@ -85,7 +85,7 @@ class ContractController extends Controller
                     $contracts = $contracts->where('tycoon_group_companies.id', $searchedS);
                 }
 
-                $contracts = $contracts->get();
+                $contracts = $contracts->paginate(10);
 
                 $numContratti = count($contracts);
                 
@@ -135,7 +135,7 @@ class ContractController extends Controller
             $contracts = Contract::join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                                     ->select('contracts.*')
                                     ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%')
-                                    ->get();
+                                    ->paginate(10);
 
             $numContratti = count($contracts);
             

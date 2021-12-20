@@ -95,4 +95,5 @@
             @endforeach
         </tbody>
     </table>
+    {{ $clients->links() }}
 @stop

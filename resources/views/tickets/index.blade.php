@@ -196,5 +196,4 @@
         </tbody>
     </table>
     {{ $tickets->links() }}
-
 @stop
