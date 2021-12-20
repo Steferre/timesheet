@@ -16,7 +16,7 @@ class Ticket extends Model
     
     public function cdc()
     {
-        return $this->belongsTo(Cdcs::class, 'cdc_id');
+        return $this->belongsTo(Cdc::class, 'cdc_id');
     }
 
     protected $fillable = [

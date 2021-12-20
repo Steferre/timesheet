@@ -98,8 +98,10 @@
                         <th>Data Inizio</th>
                         <th>Data Fine</th>
                         <th>Tempo intervento</th>
+                        <th>Ore extra admin</th>
                         <th>Commenti</th>
                         <th>Owner</th>
+                        <th>Centro di costo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,8 +111,10 @@
                             <td>{{ $ticket->start_date }}</td>
                             <td>{{ $ticket->end_date }}</td>
                             <td>{{ $ticket->workTime }}</td>
+                            <td>{{ $ticket->extraTime }}</td>
                             <td>{{ $ticket->comments }}</td>
                             <td>{{ $ticket->performedBy }}</td>
+                            <td>{{ $ticket->cdc->businessName }}</td>
                         </tr>
                     @endforeach
                 </tbody>

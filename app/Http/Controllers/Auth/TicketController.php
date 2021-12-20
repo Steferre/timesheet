@@ -258,11 +258,6 @@ class TicketController extends Controller
 
             $contract = Contract::where('slug', $data['slug'])->first();
 
-            /* echo '<pre>';
-            print_r($contract);
-            echo '<pre>'; */
-
-
             // prima di dispensare la view che permette la creazione del ticket
             // verificare che il contratto sia attivo
             if ($contract['active'] == 'N') {

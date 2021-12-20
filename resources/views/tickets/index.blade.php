@@ -102,7 +102,7 @@
                 <div class="offset-6"></div>
             </div>   
         </form>
-        <div class="form-group col-3">
+        <div class="form-group">
             <!--FORM PER L'EXPORT-->
             <form action="{{ route('tickets.export') }}" method="GET">
                 @csrf

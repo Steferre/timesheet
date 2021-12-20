@@ -124,13 +124,13 @@
                     <td class="p-2">
                         <div class="py-2" title="{{$result}}">
                             @if ($result <= 50)
-                            <div style="width: {{$result}}%; height: 10px; background-color: lightgreen;"></div>
-                            @elseif ($result >= 51 && $result <= 85)
-                            <div style="width: {{$result}}%; height: 10px; background-color: yellow;"></div>
-                            @elseif ($result >= 86 && $result <= 99)
-                            <div style="width: {{$result}}%; height: 10px; background-color: darkorange;"></div>
+                            <div style="width: {{$result}}%; height: 10px; background-color: #00b500;"></div>
+                            @elseif ($result >= 51 && $result <= 84)
+                            <div style="width: {{$result}}%; height: 10px; background-color: #ffcb00;"></div>
+                            @elseif ($result >= 85 && $result <= 99)
+                            <div style="width: {{$result}}%; height: 10px; background-color: #ff7500;"></div>
                             @else
-                            <div style="width: {{$result}}%; height: 10px; background-color: red;"></div>
+                            <div style="width: {{$result}}%; height: 10px; background-color: #c00000;"></div>
                             @endif
                         </div>
                     </td>
