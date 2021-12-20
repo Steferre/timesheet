@@ -45,20 +45,32 @@
                     selectedContract.addEventListener('change', (event) => {
                         // trovo l'id del contratto selezionato
                         contractID = event.target.value;
-                        console.log(contractID);
+                        console.log('contractID: ' + contractID);
                         // N.B: gli array sono 0 based quindi per trovare il contratto 
                         // devo togliere 1 all'id trovato in precedenza
                         // trovo il contratto
-                        const contract = contracts[contractID - 1];
+                        const contract = contracts.find(function(contract, index) {
+                            if(contract.id == contractID) {
+                                return contract;
+                            }
+                        });
                         // trovo il cliente
                         const clientID = contract.client_id;
-                        const client = clients[clientID - 1];
+                        const client = clients.find(function(client, index) {
+                            if(client.id == clientID) {
+                                return client;
+                            }
+                        });
                         cliente.value =  client.businessName;
 
                         // adesso ho necessità di sapere l'azienda del gruppo
                         // in quanto devo permettere di scegliere solo tra gli appartenenti a quella azienda
                         const companyID = contract.company_id;
-                        const company = companies[companyID - 1];
+                        const company = companies.find(function(company, index) {
+                            if(company.id == companyID) {
+                                return company;
+                            }
+                        });
                         const companyNameArray = company.businessName.split(' ');
                         const companyName = companyNameArray[0].toLowerCase();
                         
@@ -85,12 +97,15 @@
                             }
                         };
 
-                        for (let i = 0; i < usersName.length; i++) {
-                            const userName = usersName[i];
+                        if (selectUser) {
+                            for (let i = 0; i < usersName.length; i++) {
+                                const userName = usersName[i];
 
-                            selectUser.innerHTML +=  `<option id="myOption" value="${userName}">${userName}</option>`;
+                                selectUser.innerHTML +=  `<option id="myOption" value="${userName}">${userName}</option>`;
                             
-                        }
+                            }
+                        };
+                        
                     });
                 } else {
                     console.log('contratto già selezionato');

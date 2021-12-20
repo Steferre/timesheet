@@ -21,17 +21,29 @@
 
             // intercetto il campo start date
             const startDate = document.getElementById("startDate");
+            const endDate = document.getElementById("endDate");
+            let selectedStartDate = null;
 
             startDate.addEventListener('change', (e) => {
-                console.log(e.target.value);
-                const result = today >= e.target.value;
-                console.log(result);
+                
+                if (e.target.value <= today) {
+                    alert("Attenzione, non puoi inserire come data d'inizio, una data già passata!!!");
+                    e.target.value = null;
+                } else {
+                    return selectedStartDate = e.target.value;
+                }
 
-                if (!result) {
-                    alert("Attenzione, non puoi inserire come data d'inizio, una data oltre oggi!!!");
+            });
+
+            endDate.addEventListener('change', (e) => {
+
+                if (e.target.value <= selectedStartDate) {
+                    alert("Attenzione, non puoi inserire una data di fine, precedente o uguale alla data di apertura!!!");
                     e.target.value = null;
                 }
+
             });
+
         });
     </script>
 @stop
@@ -76,7 +88,7 @@
         <div class="form-row">
             <div class="form-group col-4">
                 <label for="end_date">Data fine</label>
-                <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control">
+                <input type="date" id="endDate" name="end_date" value="{{ old('end_date') }}" class="form-control">
             </div>
             <div class="form-group col-4">
                 <label for="description">Descrizione</label>
