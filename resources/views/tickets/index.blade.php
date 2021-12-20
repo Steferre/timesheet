@@ -195,4 +195,6 @@
             @endforeach
         </tbody>
     </table>
+    {{ $tickets->links() }}
+
 @stop

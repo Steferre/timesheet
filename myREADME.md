@@ -1,4 +1,4 @@
-## Aggiornato in data 17/12/2021
+## Aggiornato in data 20/12/2021
 
 ## contracts views
 index  ok
@@ -43,13 +43,14 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - aggiunto anche filtro per centri di costo
 - continuare a riscrivere la funzione index del ContractController per il caso dell'user, con lo schema usato per la funione index del TicketController
 - filtro data in range, che lavora sulla data chiusura
-##  DA FARE (EXPORT)
 - elenco contratti filtrati per cliente(es lyve)
 - nello show di un contratto vedo anche i ticket legati a quel contratto e volendo potrei esportarli
 - nel file excel l'amministratore azienda gruppo azienda cliente contratto di riferimento e ticket legati al contratto
+- se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi
+##  DA FARE (EXPORT)
 ## IPOTESI
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
+## DA AGGIUNGERE
+- paginazione in tutte le view
 
-## DA AGGIUNGERE 
-se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi

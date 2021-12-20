@@ -48,7 +48,7 @@ class TicketController extends Controller
 
             if (count($dff) == 0) {
                 // filtri non settati
-                $tickets = Ticket::all();
+                $tickets = Ticket::paginate(10);
                 
                 return view('tickets.index', [
                     'tickets' => $tickets,
@@ -96,7 +96,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.client_id', $searchedCDC);
                 }
 
-                $tickets = $tickets->select('tickets.*')->get();
+                $tickets = $tickets->select('tickets.*')->paginate(10);
 
                 if (count($tickets) > 0) {
 
@@ -150,7 +150,7 @@ class TicketController extends Controller
                 
             if (count($dff) == 0) {
                 // ritorno tutti i ticket perchè nn ho filtri attivi
-                $tickets = $tickets->get();
+                $tickets = $tickets->paginate(10);
 
 
                 return view('tickets.index', [
@@ -196,7 +196,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
                 }
 
-                $tickets = $tickets->get();
+                $tickets = $tickets->paginate(10);
 
                 if (count($tickets) > 0) {
 
