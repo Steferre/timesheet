@@ -34,25 +34,20 @@
                 <input type="text" name="uniCode" value="{{ $contract->uniCode }}" class="form-control">
             </div>
             <div class="form-group col-4">
-                <label for="start_date">Data d'inizio</label>
-                <input type="date" name="start_date" value="{{ $contract->start_date }}" class="form-control">
+                <label for="client_id">Azienda Cliente</label>
+                <input type="hidden" name="client_id" value="{{ $contract->client_id }}">
+                <input type="text" readonly class="form-control-plaintext" value="{{ $contract->client->businessName }}">
             </div> 
         </div>
         <div class="form-row">
             <div class="form-group col-4">
+                <label for="start_date">Data d'inizio</label>
+                <input type="date" name="start_date" value="{{ $contract->start_date }}" class="form-control">
+            </div> 
+            <div class="form-group col-4">
                 <label for="end_date">Data fine</label>
                 <input type="date" name="end_date" value="{{ $contract->end_date }}" class="form-control">
             </div>
-            <div class="form-group col-4">
-                <label for="description">Descrizione</label>
-                <input type="text" name="description" value="{{ $contract->description }}" placeholder="opzionale" class="form-control">
-            </div>
-            <div class="form-group col-4">
-                <label for="totHours">Totale ore contratto</label>
-                <input type="text" name="totHours" value="{{ $contract->totHours }}" placeholder="opzionale" class="form-control">
-            </div>
-        </div>
-        <div class="form-row">
             <div class="form-group col-4">
                 <label for="active">Stato</label>
                 <select name="active" id="active" class="form-control custom-select">
@@ -65,17 +60,30 @@
                     @endif
                 </select>
             </div>
-            <div class="form-group col-4">
-                <label for="company_id">Società del gruppo</label>
-                <input type="hidden" name="company_id" value="{{ $contract->company_id }}">
-                <input type="text" readonly class="form-control-plaintext" value="{{ $contract->tycoonGroupCompany->businessName }}">
+        </div>
+        <div class="form-row">
+        <div class="form-group col-4">
+                <label for="type">Stato</label>
+                <select name="type" id="type" class="form-control custom-select">
+                    @if ($contract->type == 'increase')
+                    <option value="increase" selected>Accumulo monte ore</option>
+                    <option value="decrease">Decremento monte ore</option>
+                    @elseif ($contract->type == 'decrease')
+                    <option value="increase">Accumulo monte ore</option>
+                    <option value="decrease" selected>Decremento monte ore</option>
+                    @endif
+                </select>
             </div>
             <div class="form-group col-4">
-                <label for="client_id">Azienda Cliente</label>
-                <input type="hidden" name="client_id" value="{{ $contract->client_id }}">
-                <input type="text" readonly class="form-control-plaintext" value="{{ $contract->client->businessName }}">
-            </div> 
+                <label for="totHours">Totale ore contratto</label>
+                <input type="text" name="totHours" value="{{ $contract->totHours }}" placeholder="opzionale" class="form-control">
+            </div>
+            <div class="form-group col-4">
+                <label for="description">Descrizione</label>
+                <input type="text" name="description" value="{{ $contract->description }}" placeholder="opzionale" class="form-control">
+            </div>
         </div>
+        <input type="hidden" name="company_id" value="{{ $contract->company_id }}">
         <div class="form-group">
             <button type="submit" class="btn btn-primary mt-2">AGGIORNA</button>
         </div>

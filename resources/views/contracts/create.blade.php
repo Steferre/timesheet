@@ -26,7 +26,7 @@
 
             startDate.addEventListener('change', (e) => {
                 
-                if (e.target.value <= today) {
+                if (e.target.value < today) {
                     alert("Attenzione, non puoi inserire come data d'inizio, una data già passata!!!");
                     e.target.value = null;
                 } else {
@@ -109,16 +109,18 @@
                 </select>
             </div>
             <div class="form-group col-4">
+                <label for="type">Tipologia contratto</label>
+                <select name="type" id="type" class="form-control custom-select">
+                    <option value="">Scegli lo stato del contratto...</option>
+                    <option value="increase">Accumulo monte ore</option>
+                    <option value="decrease">Decremento monte ore</option>
+                </select>
+            </div>
+            <!-- <div class="form-group col-4">
                 <label for="company_id">Società del gruppo</label>
                 <input type="hidden" name="company_id" value=6 readonly class="form-control">
                 <input type="text" value="KeyOS srl" readonly class="form-control">
-                <!-- <select name="company_id" id="company_id" class="form-control custom-select">
-                    <option value="">Scegli la società del gruppo</option>
-                    @foreach($companies as $company)
-                    <option value="{{ $company->id }}">{{ $company->businessName }}</option>
-                    @endforeach
-                </select> -->
-            </div>
+            </div> -->
             <div class="form-group col-4">
                 <label for="client_id">Azienda Cliente</label>
                 <select name="client_id" id="client_id" class="form-control custom-select">
@@ -129,6 +131,7 @@
                 </select>
             </div> 
         </div>
+        <input type="hidden" name="company_id" value=6 readonly class="form-control">
         <div class="form-group">
             <button type="submit" class="btn btn-primary mt-2">INVIA</button>
         </div>

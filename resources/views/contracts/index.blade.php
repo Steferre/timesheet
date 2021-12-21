@@ -96,13 +96,13 @@
                 <th>Nome</th>
                 <th>Codice</th>
                 <th>Data Inizio</th>
+                <th>Tipologia contratto</th>
                 <th>Ore Totali</th>
                 <th>Ore utilizzate (user+admin)</th>
                 <th>Avanzamento (%)</th>
                 <th>Ticket</th>
                 <th>Attivo</th>
                 <th>Azienda Cliente</th>
-                <th>Società del gruppo</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -115,6 +115,7 @@
                     <td>{{ $contract->name }}</td>
                     <td>{{ $contract->uniCode }}</td>
                     <td>{{ $contract->start_date }}</td>
+                    <td>{{ $contract->type }}</td>
                     <td>{{ $contract->totHours }}</td>
                     <td>{{ $contract->hours }}</td>
                     @php
@@ -137,7 +138,6 @@
                     <td>{{ count($contract->tickets) }}</td>
                     <td>{{ $contract->active }}</td>
                     <td>{{ $contract->client->businessName }}</td>
-                    <td>{{ $contract->tycoonGroupCompany->businessName }}</td>
                     @if($loggedUser['role'] == 'admin')
                         <td title="Modifica contratto">
                             <a href="{{ route('contracts.edit', $contract->id) }}">

@@ -76,12 +76,12 @@
     <div class="row mt-3">
         <div class="col-4 text-center">Data apertura: <strong>{{ date('d-m-Y', strtotime($contract->start_date)) }}</strong></div>
         <div class="col-4 text-center">Data chiusura: <strong>{{ date('d-m-Y', strtotime($contract->end_date)) }}</strong></div>
-        <div class="col-4 text-center">Ore pacchetto: <strong>{{ $contract->totHours }}</strong></div>
+        <div class="col-4 text-center">Azienda cliente: <strong>{{ $contract->client->businessName }}</strong></div>
     </div>
     <div class="row mt-3">
         <div class="col-4 text-center">Stato: <strong>{{ $contract->active }}</strong></div>
-        <div class="col-4 text-center">Azienda del gruppo: <strong>{{ $contract->tycoonGroupCompany->businessName }}</strong></div>
-        <div class="col-4 text-center">Azienda cliente: <strong>{{ $contract->client->businessName }}</strong></div>
+        <div class="col-4 text-center">Tipologia contratto: <strong>{{ $contract->type }}</strong></div>
+        <div class="col-4 text-center">Ore pacchetto: <strong>{{ $contract->totHours }}</strong></div>
     </div>
 
     <p class="text-center mt-3">Descrizione: <strong>{{ $contract->description }}</strong></p>

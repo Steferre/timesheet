@@ -1,4 +1,4 @@
-## Aggiornato in data 20/12/2021
+## Aggiornato in data 21/12/2021
 
 ## contracts views
 index  ok
@@ -54,5 +54,11 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
 ## DA AGGIUNGERE
-opzione doppia tipologia di accumulo delle ore, a salire da 0 e ascendere dal totale
-nella scelta dei centri di costo devo poter scegliere solo i centri di costo di alcune aziende
+1 opzione doppia tipologia di accumulo delle ore, a salire da 0 e ascendere dal totale
+2 nella scelta dei centri di costo devo poter scegliere solo i centri di costo di alcune aziende
+
+## RISOLUZIONE
+1 agg nuovo campo enum tabella contratti:
+- questo campo definirà se il contratto accumula ore, partendo da 0
+- oppure se sottrae ore, partendo da un totale pattiuto in sede di stipula
+2 agg nuovo campo (foreign key) nella tabella dei centri di costo, che li relaziona all'azienda cliente

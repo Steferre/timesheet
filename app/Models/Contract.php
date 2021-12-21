@@ -20,6 +20,7 @@ class Contract extends Model
         'company_id',
         'client_id',
         'slug',
+        'type',
     ];
 
 

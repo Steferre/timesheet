@@ -212,6 +212,7 @@ class ContractController extends Controller
             'description' => 'nullable',
             'totHours' => 'required|numeric',
             'active' => 'required',
+            'type' => 'required',
             'company_id' => 'required',
             'client_id' => 'required',
         ]);
@@ -233,6 +234,7 @@ class ContractController extends Controller
         $contract['description'] = $data['description'];
         $contract['totHours'] = $data['totHours'];
         $contract['active'] = $data['active'];
+        $contract['type'] = $data['type'];
         $contract['company_id'] = $data['company_id'];
         $contract['client_id'] = $data['client_id'];
         $contract['slug'] = $slug;
@@ -295,6 +297,7 @@ class ContractController extends Controller
             'description' => 'required',
             'totHours' => 'required|numeric',
             'active' => 'required',
+            'type' => 'required',
             'company_id' => 'required',
             'client_id' => 'required',
         ]);
@@ -302,10 +305,10 @@ class ContractController extends Controller
         $data = $request->all();
 
         $contract = Contract::findOrFail($id);
-        /* echo '<pre>';
+        echo '<pre>';
         print_r($data);
         echo '</pre>';
-        die(); */
+        die();
 
         $contract->update($data);
 
