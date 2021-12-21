@@ -356,47 +356,31 @@ class TicketController extends Controller
 
         $contract = Contract::findOrFail($data['contract_id']);
 
-        // ho bisogno anche delle ore già utilizzate per questo contratto
-        // in modo da poter controllare se con l'aggiunta di questo ticket 
-        // il monte ore totale del contratto viene raggiunto o superato
-
         $contract->hours = DB::table('tickets')
-                                    ->where('tickets.contract_id', $contract->id)
-                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
-
-
-        // devo controllare che le ore che sto aggiungendo non facciano superare il limite del contratto
-        $x = $contract->totHours;
-        $y = $contract->hours;
-        $z = ($data['workTime'] + $data['extraTime']);
-
-        $lastTenPercHours = ($x * 10)/100;
-        
-        $availableHours = $x -$y;
-
-        $result = $x - ($y + $z);
+                            ->where('tickets.contract_id', $contract->id)
+                            ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
 
         $client = $contract->client->businessName;
 
         // controlliamo se l'azienda cliente è già presente nella lista dei centri di costo
         $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
-                                ->count('cdcs.businessName');
-        
+                            ->count('cdcs.businessName');
+                        
         // se non è presente la inserisco
         if ($cdcRecordExist == 0) {
             // l'azienda cliente non è registrata come centro di costo
             // a questo punto la inserisco
             $cdc = new Cdc();
-
+                        
             $cdc['businessName'] = $client;
-
+                        
             $cdc->save();
         }
 
         unset($data['cliente']);
 
         $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
-                                ->select('cdcs.id')->first();
+                    ->select('cdcs.id')->first();
 
         // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
         $ticket = new Ticket();
@@ -419,41 +403,122 @@ class TicketController extends Controller
 
         }
 
-        
-        // controlli sulle ore rimanenti di un contratto                    
-        if ($result < 0) {
-            // significa che le ore del contratto sono finite
-            // e che con l'aggiunta di questo ticket si andrebbe oltre
-            return back()->with("error", "Attenzione, le ore aggiunte superano quelle rimaste a disposizione, per il seguente contratto! Ore rimaste " . $availableHours)
-                        ->withInput($request->input());
+        if ($contract['type'] == 'decrease') {
+            // ho bisogno anche delle ore già utilizzate per questo contratto
+            // in modo da poter controllare se con l'aggiunta di questo ticket 
+            // il monte ore totale del contratto viene raggiunto o superato
 
-        } else if ($lastTenPercHours > $result && $result > 0) {
-            // siamo nell'ultimo 10% di ore disponibili
-            $ticket->save();
+            /* $contract->hours = DB::table('tickets')
+                                    ->where('tickets.contract_id', $contract->id)
+                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime')); */
 
-            return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di Ore rimaste disponibili < 10%");
+            // devo controllare che le ore che sto aggiungendo non facciano superare il limite del contratto
+            $x = $contract->totHours;
+            $y = $contract->hours;
+            $z = ($data['workTime'] + $data['extraTime']);
 
-        } else if ($result == 0) {
-            // il contratto ha esaurito le ore disponibili
-            // dopo la creazione di questo ticket 
-            // è necessario chiudere il contratto
-            $ticket->save();
+            $lastTenPercHours = ($x * 10)/100;
 
-            // devo disattivare il contratto
-            unset($contract['hours']);
-            $contract->active = 'N';
-            $contract->save();
+            $availableHours = $x -$y;
 
-            return redirect('tickets')->with("warning", "ATTENZIONE!!! " . "Le ore disponibili per il contratto: " . $contract->name . " " . "sono terminate! Il contratto è quindi stato chiuso");
+            $result = $x - ($y + $z);
+
+            /* $client = $contract->client->businessName;
+
+            // controlliamo se l'azienda cliente è già presente nella lista dei centri di costo
+            $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
+                                ->count('cdcs.businessName');
+
+            // se non è presente la inserisco
+            if ($cdcRecordExist == 0) {
+                // l'azienda cliente non è registrata come centro di costo
+                // a questo punto la inserisco
+                $cdc = new Cdc();
+
+                $cdc['businessName'] = $client;
+
+                $cdc->save();
+            } */
+
+            /* unset($data['cliente']);
+
+            $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
+                                    ->select('cdcs.id')->first();
+
+            // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
+            $ticket = new Ticket();
+
+            $ticket['contract_id'] = $data['contract_id'];
+            $ticket['workTime'] = $data['workTime'];
+            $ticket['extraTime'] = $data['extraTime'];
+            $ticket['comments'] = $data['comments'];
+            $ticket['start_date'] = $data['start_date'];
+            $ticket['end_date'] = $data['end_date'];
+            $ticket['performedBy'] = $data['performedBy'];
+            $ticket['openBy'] = $data['openBy'];
+            if ($data['cdc_id'] == null) {
+
+                $ticket['cdc_id'] = $newCDC['id'];
+
+            } else {
+
+                $ticket['cdc_id'] = $data['cdc_id'];
+
+            } */
+
+            // controlli sulle ore rimanenti di un contratto                    
+            if ($result < 0) {
+                // significa che le ore del contratto sono finite
+                // e che con l'aggiunta di questo ticket si andrebbe oltre
+                return back()->with("error", "Attenzione, le ore aggiunte superano quelle rimaste a disposizione, per il seguente contratto! Ore rimaste " . $availableHours)
+                            ->withInput($request->input());
+
+            } else if ($lastTenPercHours > $result && $result > 0) {
+                // siamo nell'ultimo 10% di ore disponibili
+                $ticket->save();
+
+                return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di Ore rimaste disponibili < 10%");
+
+            } else if ($result == 0) {
+                // il contratto ha esaurito le ore disponibili
+                // dopo la creazione di questo ticket 
+                // è necessario chiudere il contratto
+                $ticket->save();
+
+                // devo disattivare il contratto
+                unset($contract['hours']);
+                $contract->active = 'N';
+                $contract->save();
+
+                return redirect('tickets')->with("warning", "ATTENZIONE!!! " . "Le ore disponibili per il contratto: " . $contract->name . " " . "sono terminate! Il contratto è quindi stato chiuso");
+
+            } else {
+
+                $ticket->save();
+
+                return redirect()->route('tickets.index');
+            }
 
         } else {
-
+            /* echo '<pre>';
+            print_r($data);
+            echo '</pre>';
+            echo '<pre>';
+            print_r($contract);
+            echo '</pre>'; */
+            
+            // caso in cui la tipologia del contratto sia di ACCUMULO ORE
+            // non essendoci un tetto
+            // le ore vengono sommate, tenendo in cosiderazione sia le ore dell'user sia quelle extra dell'admin
+            $inputHours = ($data['workTime'] + $data['extraTime']);
+            $usedHours = ($contract->hours + $inputHours);
+            // possiamo tenere questo parametro come eventuale verifica per emettere un avviso superate le x ore di tickets caricati
+            //echo $usedHours;
+            //die();
             $ticket->save();
 
             return redirect()->route('tickets.index');
-        }
-
-        
+        }    
     }
 
     /**
@@ -527,76 +592,98 @@ class TicketController extends Controller
 
         // nuove ore inserite 
         $modifiedTicketHours = ($data['workTime']) + ($data['extraTime']);
+
+        $diffHours = $modifiedTicketHours - $savedTicketHours;
         
         // prima di effettuare l'update, devo accertarmi che le ore aggiunte non sforino il limite delle ore totali del contratto
         // quindi devo trovare la differenza tra le ore già presenti nel ticket e quelle dell'aggiornamento
         // e valutare se sono congrue con quanto detto sopra
         // ho bisogno anche di sapere quante ore mancano alla fine del contratto
+        echo '<pre>';
+        echo 'ore salvate nel ticket che sto modificando: ' . $savedTicketHours;
+        echo '</pre>';
+        echo '<pre>';
+        echo 'ore totali associate al contratto: ' . $contract->hours;
+        echo '</pre>';
+        echo '<pre>';
+        echo 'nuove ore inserite: ' . $modifiedTicketHours;
+        echo '</pre>';
+        echo '<pre>';
+        echo 'differenza tra ore originali e ore modificate: ' . $diffHours;
+        echo '</pre>';
+        
+        //PROBABILE PUNTO DI SEPARAZIONE TRA TIPO DI CONTRATTO
+        if ($contract['type'] == 'decrease') {
+            $remainingHours = $contract->totHours - $contract->hours;
 
-        $remainingHours = $contract->totHours - $contract->hours;
-        $diffHours = $modifiedTicketHours - $savedTicketHours;
+            if ($remainingHours > $diffHours) {
+                $newRemainingHours = $remainingHours - $diffHours;
+            } else {
+                $newRemainingHours = $remainingHours;
+            }
 
-        if ($remainingHours > $diffHours) {
-            $newRemainingHours = $remainingHours - $diffHours;
-        } else {
-            $newRemainingHours = $remainingHours;
-        }
+            $lastTenPercHours = ($contract->totHours * 10)/100;
 
-        $lastTenPercHours = ($contract->totHours * 10)/100;
+            if ($diffHours < 0) {
+                // in questo caso sto togliendo ore
+                // perchè ne avevo segnate troppe
+                
+                $ticket->update($data);
+    
+                $warningValue = ($contract->totHours * 90) / 100;
+    
+                if ($contract->hours > $warningValue) {
+    
+                    return redirect('/tickets/' . $ticket->id)->with("warning", "Manca meno del 10% delle ore del contratto!");
+    
+                } else {
+                    
+                    return redirect()->route('tickets.show', ['id' => $ticket->id]);
+    
+                }
+    
+    
+            } else {
+    
+                if ($remainingHours < $diffHours) {
+                    
+                    return back()->with("error", "ATTENZIONE, ore residue contratto: " . $remainingHours . " ore aggiuntive inserite: " . $diffHours)
+                                ->withInput($data);
+                    
+                } else if ($lastTenPercHours >= $newRemainingHours && $diffHours < $remainingHours) {
+                    
+                    $ticket->update($data);
+        
+                    return redirect('/tickets/' . $ticket->id)->with("warning", "il contratto " . $contract->name . " ha meno del 10% di ore residue disponibili!!!");
+        
+                } else if ($remainingHours == $diffHours) {
+                    
+                    unset($contract['hours']);
+        
+                    $ticket->update($data);
+                    // devo disattivare il contratto
+                    $contract->active = 'N';
+                    $contract->save();
+        
+                    return redirect('/tickets')->with("warning", "MAX ore contratto raggiunto, il contratto è stato CHIUSO!!!");
+        
+        
+                } else {
+                    
+                    $ticket->update($data);
+                    return redirect()->route('tickets.show', ['id' => $ticket->id]);
+        
+                }
+    
+            }
 
-        if ($diffHours < 0) {
-            // in questo caso sto togliendo ore
-            // perchè ne avevo segnate troppe
-            
+        } else {// $contract['type'] == 'increase'
+            // DA INSERIRE UN RAGIONAMENTO SUL TEMPO RESIDUO
+            // se inferiore all 85% avvisare
+            // per il momento ritornare solo la view
             $ticket->update($data);
-
-            $warningValue = ($contract->totHours * 90) / 100;
-
-            if ($contract->hours > $warningValue) {
-
-                return redirect('/tickets/' . $ticket->id)->with("warning", "Manca meno del 10% delle ore del contratto!");
-
-            } else {
-                
-                return redirect()->route('tickets.show', ['id' => $ticket->id]);
-
-            }
-
-
-        } else {
-
-            if ($remainingHours < $diffHours) {
-                
-                return back()->with("error", "ATTENZIONE, ore residue contratto: " . $remainingHours . " ore aggiuntive inserite: " . $diffHours)
-                            ->withInput($data);
-                
-            } else if ($lastTenPercHours >= $newRemainingHours && $diffHours < $remainingHours) {
-                
-                $ticket->update($data);
-    
-                return redirect('/tickets/' . $ticket->id)->with("warning", "il contratto " . $contract->name . " ha meno del 10% di ore residue disponibili!!!");
-    
-            } else if ($remainingHours == $diffHours) {
-                
-                unset($contract['hours']);
-    
-                $ticket->update($data);
-                // devo disattivare il contratto
-                $contract->active = 'N';
-                $contract->save();
-    
-                return redirect('/tickets')->with("warning", "MAX ore contratto raggiunto, il contratto è stato CHIUSO!!!");
-    
-    
-            } else {
-                
-                $ticket->update($data);
-                return redirect()->route('tickets.show', ['id' => $ticket->id]);
-    
-            }
-
+            return redirect()->route('tickets.show', ['id' => $ticket->id]);
         }
-
     }
 
     /**

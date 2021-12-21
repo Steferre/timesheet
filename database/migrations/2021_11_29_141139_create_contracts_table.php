@@ -20,7 +20,7 @@ class CreateContractsTable extends Migration
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->text('description')->nullable();
-            $table->integer('totHours');
+            $table->integer('totHours')->nullable();
             $table->enum('active', ['Y','N'])->default('N');
             $table->timestamps();
         });

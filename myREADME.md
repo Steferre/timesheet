@@ -62,3 +62,6 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - questo campo definirà se il contratto accumula ore, partendo da 0
 - oppure se sottrae ore, partendo da un totale pattiuto in sede di stipula
 2 agg nuovo campo (foreign key) nella tabella dei centri di costo, che li relaziona all'azienda cliente
+
+
+oltre la data di fine il contratto si chiude automaticamente

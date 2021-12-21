@@ -36,7 +36,7 @@
             <div class="form-group col-4">
                 <label for="client_id">Azienda Cliente</label>
                 <input type="hidden" name="client_id" value="{{ $contract->client_id }}">
-                <input type="text" readonly class="form-control-plaintext" value="{{ $contract->client->businessName }}">
+                <input type="text" readonly class="form-control" value="{{ $contract->client->businessName }}">
             </div> 
         </div>
         <div class="form-row">
@@ -62,8 +62,19 @@
             </div>
         </div>
         <div class="form-row">
-        <div class="form-group col-4">
-                <label for="type">Stato</label>
+            <!--CONFIGURAZIONE con campo tipologia contratto non modificabile-->
+            <div class="form-group col-4">
+                <label for="type">Tipologia contratto</label>
+                @if ($contract->type == 'increase')
+                    <input type="hidden" name="type" value="{{ $contract->type }}">
+                    <input type="text" value="Accumulo monte ore" readonly class="form-control">
+                @elseif ($contract->type == 'decrease')
+                    <input type="hidden" name="type" value="{{ $contract->type }}">
+                    <input type="text" value="Decremento monte ore" readonly class="form-control">
+                @endif    
+            </div>
+            <!-- <div class="form-group col-4">
+                <label for="type">Tipologia contratto</label>
                 <select name="type" id="type" class="form-control custom-select">
                     @if ($contract->type == 'increase')
                     <option value="increase" selected>Accumulo monte ore</option>
@@ -73,7 +84,7 @@
                     <option value="decrease" selected>Decremento monte ore</option>
                     @endif
                 </select>
-            </div>
+            </div> -->
             <div class="form-group col-4">
                 <label for="totHours">Totale ore contratto</label>
                 <input type="text" name="totHours" value="{{ $contract->totHours }}" placeholder="opzionale" class="form-control">

@@ -116,6 +116,7 @@
                     <td>{{ $contract->uniCode }}</td>
                     <td>{{ $contract->start_date }}</td>
                     <td>{{ $contract->type }}</td>
+                    @if ($contract->totHours != null)
                     <td>{{ $contract->totHours }}</td>
                     <td>{{ $contract->hours }}</td>
                     @php
@@ -135,6 +136,11 @@
                             @endif
                         </div>
                     </td>
+                    @else
+                    <td>Nessun limite</td>
+                    <td>{{ $contract->hours }}</td>
+                    <td>---</td>
+                    @endif
                     <td>{{ count($contract->tickets) }}</td>
                     <td>{{ $contract->active }}</td>
                     <td>{{ $contract->client->businessName }}</td>

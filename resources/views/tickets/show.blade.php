@@ -62,7 +62,7 @@ if (isset($data['getParams'])){
         <div class="col-4 text-center">Eseguito da: <strong>{{ $ticket->performedBy }}</strong></div>
     </div>
     <div class="row mt-3">
-        <div class="col-4 text-center">Durata intervento: <strong>{{ $ticket->workTime }}</strong></div>
+        <div class="col-4 text-center">Ore intervento: <strong>{{ ($ticket->workTime + $ticket->extraTime) }}</strong></div>
         <div class="col-4 text-center">Data apertura: <strong>{{ date('d-m-Y', strtotime($ticket->start_date)) }}</strong></div>
         <div class="col-4 text-center">Data chiusura: <strong>{{ date('d-m-Y', strtotime($ticket->end_date)) }}</strong></div>
     </div>

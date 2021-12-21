@@ -203,28 +203,29 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {  
         $request->validate([
             'name' => 'required',
             'uniCode' => 'required|unique:contracts,uniCode',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
             'description' => 'nullable',
-            'totHours' => 'required|numeric',
             'active' => 'required',
             'type' => 'required',
+            'totHours' => 'nullable|numeric',
             'company_id' => 'required',
             'client_id' => 'required',
         ]);
 
         $data = $request->all();
 
-        $slug = substr(md5($data['name']. '$' . $data['_token']), 0, 10);
-        echo '<pre>';
+        /* echo '<pre>';
         print_r($data);
-        echo '</pre>';
-        die();
-
+        echo '</pre>';    
+        die('dopo la validazione'); */
+        
+        $slug = substr(md5($data['name']. '$' . $data['_token']), 0, 10);
+        
         $contract = New Contract();
 
         $contract['name'] = $data['name'];
@@ -295,7 +296,7 @@ class ContractController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'description' => 'required',
-            'totHours' => 'required|numeric',
+            'totHours' => 'nullable|numeric',
             'active' => 'required',
             'type' => 'required',
             'company_id' => 'required',
@@ -305,10 +306,10 @@ class ContractController extends Controller
         $data = $request->all();
 
         $contract = Contract::findOrFail($id);
-        echo '<pre>';
+        /* echo '<pre>';
         print_r($data);
         echo '</pre>';
-        die();
+        die(); */
 
         $contract->update($data);
 
