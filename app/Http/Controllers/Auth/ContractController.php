@@ -219,10 +219,10 @@ class ContractController extends Controller
         $data = $request->all();
 
         $slug = substr(md5($data['name']. '$' . $data['_token']), 0, 10);
-        /* echo '<pre>';
-        print_r($slug);
+        echo '<pre>';
+        print_r($data);
         echo '</pre>';
-        die(); */
+        die();
 
         $contract = New Contract();
 

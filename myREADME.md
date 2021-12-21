@@ -54,3 +54,5 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
 ## DA AGGIUNGERE
+opzione doppia tipologia di accumulo delle ore, a salire da 0 e ascendere dal totale
+nella scelta dei centri di costo devo poter scegliere solo i centri di costo di alcune aziende

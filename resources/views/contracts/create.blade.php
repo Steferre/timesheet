@@ -110,12 +110,14 @@
             </div>
             <div class="form-group col-4">
                 <label for="company_id">Società del gruppo</label>
-                <select name="company_id" id="company_id" class="form-control custom-select">
+                <input type="hidden" name="company_id" value=6 readonly class="form-control">
+                <input type="text" value="KeyOS srl" readonly class="form-control">
+                <!-- <select name="company_id" id="company_id" class="form-control custom-select">
                     <option value="">Scegli la società del gruppo</option>
                     @foreach($companies as $company)
                     <option value="{{ $company->id }}">{{ $company->businessName }}</option>
                     @endforeach
-                </select>
+                </select> -->
             </div>
             <div class="form-group col-4">
                 <label for="client_id">Azienda Cliente</label>

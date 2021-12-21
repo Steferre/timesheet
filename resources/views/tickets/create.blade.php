@@ -163,7 +163,7 @@
                     <select name="contract_id" id="contract_id" class="form-control custom-select">
                         <option value="">Scegli il contratto su cui attivare il ticket</option>
                         @foreach($contracts as $contract)
-                            <option value="{{ $contract->id }}" {{ old('contract_id') == $contract->id ? 'selected' : '' }}>{{ $contract->name }}</option>
+                            <option <?php if ($contract->id == old('contract_id')) echo "selected";?> value="{{ $contract->id }}">{{ $contract->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -190,7 +190,7 @@
                         <option value="{{ $activeUser['name'] }}">{{ $activeUser['name'] }}</option>
                     @endif
                     @foreach($users as $user)
-                        <option value="{{ $user->name }}" {{ old('performedBy') == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                        <option <?php if ($user->name == old('performedBy')) echo "selected";?> value="{{ $user->name }}">{{ $user->name }}</option>
                     @endforeach
                 </select>
             </div>
