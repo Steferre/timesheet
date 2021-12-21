@@ -14,6 +14,11 @@ class Cdc extends Model
         return $this->hasMany(Ticket::class, 'cdc_id');
     }
 
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class, 'cdcs_clients', 'cdcID', 'clientID');
+    }
+
     protected $fillable = [
         'businessName',
     ];

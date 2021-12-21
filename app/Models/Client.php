@@ -14,6 +14,11 @@ class Client extends Model
         return $this->hasMany(Contract::class, 'client_id');
     }
 
+    public function cdcs()
+    {
+        return $this->belongsToMany(Cdc::class, 'cdcs_clients', 'clientID', 'cdcID');
+    }
+
     protected $fillable = [
         'businessName',
         'email',

@@ -63,5 +63,6 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - oppure se sottrae ore, partendo da un totale pattiuto in sede di stipula
 2 agg nuovo campo (foreign key) nella tabella dei centri di costo, che li relaziona all'azienda cliente
 
-
+## RAGIONAMENTI CON MARCELLO
 oltre la data di fine il contratto si chiude automaticamente
+fare diverse view per vedere i contratti, solo quelli attivi, solo quelli chiusi o tutti
