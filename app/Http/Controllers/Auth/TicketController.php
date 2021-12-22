@@ -239,6 +239,10 @@ class TicketController extends Controller
         $activeUserCompanyName = $emailPathArray[0];
 
         // recupero i centri di costo da passare alla view
+        // devo farlo in due modi diversi
+        // se creo un ticket sapendo già il contratto posso usare una via
+        // nel caso in cui il contratto lo scelgo durante la creazione
+        // devo usare js per dispensare solo i cdc legati al cliente scelto in base al contratto
         $cdcs = Cdc::all();
 
 
@@ -270,9 +274,23 @@ class TicketController extends Controller
 
             $users = User::where('email', 'like', '%'. $companyName .'%')->get();
 
-            /* echo '<pre>';
-            print_r($companyName);
-            echo '<pre>'; */
+            // recupero i centri di costo da passare alla view
+            //$cdcs = $contract->client->cdcs()->groupBy('cdcID')->get();
+            /* $client = Client::find($contract->client->id);
+            $cdcs = $client->cdcs()->get();
+            echo '<pre>';
+            echo 'numero di righe trovate: ' . count($cdcs);
+            echo '</pre>';
+            echo '<pre>';
+            //print_r($cdcs);
+            echo '</pre>';
+            foreach ($cdcs as $cdc) {
+                echo '<pre>';
+                print_r($cdc->businessName);
+                echo '<pre>';
+            }
+            
+            die(); */
 
             if(isset($contract)) {
                 return view('tickets.create', [
@@ -348,7 +366,10 @@ class TicketController extends Controller
         ]);
 
         $data = $request->all();
-        
+        /* echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        die(); */
 
         if ($data['extraTime'] == null) {
             $data['extraTime'] = 0;
@@ -359,11 +380,11 @@ class TicketController extends Controller
         $contract->hours = DB::table('tickets')
                             ->where('tickets.contract_id', $contract->id)
                             ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
-
-        $client = $contract->client->businessName;
+        // recupero l'azienda cliente
+        $client = $contract->client;
 
         // controlliamo se l'azienda cliente è già presente nella lista dei centri di costo
-        $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
+        $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client->businessName .'%')
                             ->count('cdcs.businessName');
                         
         // se non è presente la inserisco
@@ -379,7 +400,7 @@ class TicketController extends Controller
 
         unset($data['cliente']);
 
-        $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
+        $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client->businessName .'%')
                     ->select('cdcs.id')->first();
 
         // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
@@ -408,10 +429,6 @@ class TicketController extends Controller
             // in modo da poter controllare se con l'aggiunta di questo ticket 
             // il monte ore totale del contratto viene raggiunto o superato
 
-            /* $contract->hours = DB::table('tickets')
-                                    ->where('tickets.contract_id', $contract->id)
-                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime')); */
-
             // devo controllare che le ore che sto aggiungendo non facciano superare il limite del contratto
             $x = $contract->totHours;
             $y = $contract->hours;
@@ -419,52 +436,9 @@ class TicketController extends Controller
 
             $lastTenPercHours = ($x * 10)/100;
 
-            $availableHours = $x -$y;
+            $availableHours = $x - $y;
 
             $result = $x - ($y + $z);
-
-            /* $client = $contract->client->businessName;
-
-            // controlliamo se l'azienda cliente è già presente nella lista dei centri di costo
-            $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
-                                ->count('cdcs.businessName');
-
-            // se non è presente la inserisco
-            if ($cdcRecordExist == 0) {
-                // l'azienda cliente non è registrata come centro di costo
-                // a questo punto la inserisco
-                $cdc = new Cdc();
-
-                $cdc['businessName'] = $client;
-
-                $cdc->save();
-            } */
-
-            /* unset($data['cliente']);
-
-            $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client .'%')
-                                    ->select('cdcs.id')->first();
-
-            // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
-            $ticket = new Ticket();
-
-            $ticket['contract_id'] = $data['contract_id'];
-            $ticket['workTime'] = $data['workTime'];
-            $ticket['extraTime'] = $data['extraTime'];
-            $ticket['comments'] = $data['comments'];
-            $ticket['start_date'] = $data['start_date'];
-            $ticket['end_date'] = $data['end_date'];
-            $ticket['performedBy'] = $data['performedBy'];
-            $ticket['openBy'] = $data['openBy'];
-            if ($data['cdc_id'] == null) {
-
-                $ticket['cdc_id'] = $newCDC['id'];
-
-            } else {
-
-                $ticket['cdc_id'] = $data['cdc_id'];
-
-            } */
 
             // controlli sulle ore rimanenti di un contratto                    
             if ($result < 0) {
@@ -476,6 +450,16 @@ class TicketController extends Controller
             } else if ($lastTenPercHours > $result && $result > 0) {
                 // siamo nell'ultimo 10% di ore disponibili
                 $ticket->save();
+
+                if ($data['cdc_id'] == null) {
+
+                    $client->cdcs()->attach($newCDC['id']);
+        
+                } else {
+        
+                    $client->cdcs()->attach($data['cdc_id']);
+        
+                }
 
                 return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di Ore rimaste disponibili < 10%");
 
@@ -490,33 +474,65 @@ class TicketController extends Controller
                 $contract->active = 'N';
                 $contract->save();
 
+                // devo sempre salvare la relazione enlla tabella pivot
+                if ($data['cdc_id'] == null) {
+
+                    $client->cdcs()->attach($newCDC['id']);
+        
+                } else {
+        
+                    $client->cdcs()->attach($data['cdc_id']);
+        
+                }
+
                 return redirect('tickets')->with("warning", "ATTENZIONE!!! " . "Le ore disponibili per il contratto: " . $contract->name . " " . "sono terminate! Il contratto è quindi stato chiuso");
 
             } else {
 
                 $ticket->save();
 
+                if ($data['cdc_id'] == null) {
+
+                    $client->cdcs()->attach($newCDC['id']);
+        
+                } else {
+        
+                    $client->cdcs()->attach($data['cdc_id']);
+        
+                }
+
                 return redirect()->route('tickets.index');
             }
 
         } else {
-            /* echo '<pre>';
-            print_r($data);
-            echo '</pre>';
-            echo '<pre>';
-            print_r($contract);
-            echo '</pre>'; */
-            
             // caso in cui la tipologia del contratto sia di ACCUMULO ORE
             // non essendoci un tetto
-            // le ore vengono sommate, tenendo in cosiderazione sia le ore dell'user sia quelle extra dell'admin
+            // le ore vengono sommate, tenendo in considerazione sia le ore dell'user sia quelle extra dell'admin
             $inputHours = ($data['workTime'] + $data['extraTime']);
             $usedHours = ($contract->hours + $inputHours);
             // possiamo tenere questo parametro come eventuale verifica per emettere un avviso superate le x ore di tickets caricati
-            //echo $usedHours;
-            //die();
-            $ticket->save();
+            // echo $usedHours;
+            // die();
 
+            // recupero l'azienda cliente
+            $clientCompany = $contract->client;
+            // salvo il nuovo ticket
+            $ticket->save();
+            // per compilare la tabella pivot di cdc e client
+            if ($data['cdc_id'] == null) {
+
+                $client->cdcs()->attach($newCDC['id']);
+    
+            } else {
+    
+                $client->cdcs()->attach($data['cdc_id']);
+    
+            }
+
+            /* echo '<pre>';
+            print_r($clientCompany);
+            echo '</pre>';
+            die(); */
             return redirect()->route('tickets.index');
         }    
     }
