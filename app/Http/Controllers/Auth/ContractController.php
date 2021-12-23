@@ -27,18 +27,18 @@ class ContractController extends Controller
 
         $dff = $request->only([
             'searchedC',
-            'searchedS',
+            'contractS',
+            'contractT',
         ]); // dff = data from filters
 
         /* echo '<pre>';
         var_dump($dff);
         echo '</pre>';
-        die();*/  
+        die(); */
         // se sono admin posso vedere tutti i contratti
         if ($loggedUser['role'] == 'admin') {
 
             $clients = Client::all();
-            $companies = TycoonGroupCompany::all();
 
             if (count($dff) == 0) {
                 // faccio vedere tutto
@@ -64,14 +64,14 @@ class ContractController extends Controller
                     'contracts' => $contracts,
                     'loggedUser' => $loggedUser,   
                     'clients' => $clients,   
-                    'companies' => $companies,   
                 ]);
 
             } else {
                 // count($dff) > 0
                 // ho dei filtri attivi
                 $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
-                $searchedS = isset($dff['searchedS']) ? strtolower($dff['searchedS']) : null;
+                $contractS = isset($dff['contractS']) ? strtolower($dff['contractS']) : null;
+                $contractT = isset($dff['contractT']) ? strtolower($dff['contractT']) : null;
 
                 // devo recuperare e mostrare i contratti che soddisfano i dati dei filtri
                 $contracts = Contract::join('clients', 'contracts.client_id', '=', 'clients.id')
@@ -81,8 +81,11 @@ class ContractController extends Controller
                 if ($searchedC) {
                     $contracts = $contracts->where('clients.id', $searchedC);
                 }
-                if ($searchedS) {
-                    $contracts = $contracts->where('tycoon_group_companies.id', $searchedS);
+                if ($contractS) {
+                    $contracts = $contracts->where('contracts.active', $contractS);
+                }
+                if ($contractT) {
+                    $contracts = $contracts->where('contracts.type', $contractT);
                 }
 
                 $contracts = $contracts->paginate(10);
@@ -102,13 +105,18 @@ class ContractController extends Controller
                                         ->sum(DB::raw('tickets.workTime + tickets.extraTime'));                 
                 }
 
+                /* echo '<pre>';
+                var_dump($contractS);
+                echo '</pre>';
+                die(); */
+
                 return view('contracts.index', [
                     'contracts' => $contracts,
                     'loggedUser' => $loggedUser,
                     'clients' => $clients,   
-                    'companies' => $companies,
                     'searchedC' => $searchedC,   
-                    'searchedS' => $searchedS,   
+                    'contractS' => $contractS,   
+                    'contractT' => $contractT,   
                 ]);
 
             }
@@ -168,12 +176,20 @@ class ContractController extends Controller
                 if ($searchedC) {
                     $contracts = $contracts->where('client_id', $searchedC);
                 }
+                if ($contractS) {
+                    $contracts = $contracts->where('contracts.active', $contractS);
+                }
+                if ($contractT) {
+                    $contracts = $contracts->where('contracts.type', $contractT);
+                }
 
                 return view('contracts.index', [
                     'contracts' => $contracts,
                     'loggedUser' => $loggedUser,
                     'clients' => $clients,
-                    'searchedC' => $searchedC,
+                    'searchedC' => $searchedC,   
+                    'contractS' => $contractS,   
+                    'contractT' => $contractT,
                 ]);
             }
         }

@@ -49,24 +49,42 @@
                         @endforeach
                     </select>
                 </div>
-                @if(Auth::user()['role'] == 'admin')
-                    <div class="form-group col-3">
-                        @php
-                            $result = isset($searchedS);
-                        @endphp
-                        <!-- <label for="searchedS"></label> -->
-                        <select name="searchedS" class="form-control">
-                            <option value="">Seleziona la Società del gruppo</option>
-                            @foreach($companies as $company)
-                                @if(!$result)
-                                    <option value="{{ $company->id }}">{{ $company->businessName }}</option>
+                <div class="form-group col-3">
+                    @php
+                    $result = isset($contractS);
+                    @endphp
+                    <!-- <label for="searchedC"></label> -->
+                    <select name="contractS" class="form-control">
+                        @if(!$result)
+                            <option value="">Stato contratto</option>
+                            <option value="Y">Attivo</option>
+                            <option value="N">Non Attivo</option>
+                        @else
+                            <option <?php if ($contractS == null) echo "selected";?> value="">Stato contratto</option>
+                            <option <?php if ($contractS == "y") echo "selected";?> value="Y">Attivo</option>
+                            <option <?php if ($contractS == "n") echo "selected";?> value="N">Non Attivo</option>
+                        @endif    
+                    </select>
+                </div>
+                <div class="form-group col-3">
+                    @php
+                        $result = isset($contractT);
+                    @endphp
+                    <select name="contractT" class="form-control">
+                        <option value="">Seleziona il tipo di contratto</option>
+                        @foreach($contracts as $contract)
+                            @if(!$result)
+                                @if($contract->type == 'increase')
+                                    <option value="{{ $contract->type }}">Accumulo</option>
                                 @else
-                                    <option <?php if ($company->id == $searchedS) echo "selected";?> value="{{ $company->id }}">{{ $company->businessName }}</option>
+                                    <option value="{{ $contract->type }}">Decremento</option>
                                 @endif
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
+                            @else
+                                <option <?php if ($contract->type == $contractT) echo "selected";?> value="{{ $contract->type }}">{{ $contract->type }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
                 <div class="form-group col-3">
                     <button type="submit" class="btn btn-primary ml-3">FILTRA</button>
                     <a href="{{ route('contracts.index') }}" class="btn btn-secondary ml-3" role="button">ANNULLA FILTRO</a>

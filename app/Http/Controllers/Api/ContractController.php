@@ -37,21 +37,14 @@ class ContractController extends Controller
 
     public function filter()
     {
-        /* $contracts = Contract::join('tickets', 'tickets.contract_id', '=', 'contracts.id')
-                            ->where('contracts.type', 'decrease')
-                            ->groupBy('contracts.id')
-                            ->get(); */
-        $contracts = Contract::join('tickets', 'tickets.contract_id', '=', 'contracts.id')
-                        ->join('clients', 'clients.id', '=', 'contracts.client_id')
-                        ->join('cdcs', 'tickets.cdc_id', '=', 'cdcs.id')
-                        ->select('contracts.name', 'clients.businessName as azienda cliente', 'tickets.id',
-                                'tickets.workTime', 'tickets.extraTime', 'tickets.cdc_id',
-                                'cdcs.businessName as centro di costo')
+        $contracts = Contract::select('contracts.*')
                         ->where('type', 'decrease')
                         ->get();
+
         foreach ($contracts as $contract) {
-            $contract->hours = $contract->where('tickets.contract_id', $contract->id)
-            ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
+            $contract->hours = Contract::join('tickets', 'contracts.id', '=', 'tickets.contract_id')
+                                    ->where('tickets.contract_id', $contract->id)
+                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
         }                       
 
         return response()->json([
