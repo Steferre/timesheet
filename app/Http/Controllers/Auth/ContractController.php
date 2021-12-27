@@ -382,11 +382,16 @@ class ContractController extends Controller
             'contractT',
         ]);
 
+        /* echo '<pre>';
+        print_r($dff);
+        echo '</pre>';
+        die(); */
         $contracts = Contract::join('clients', 'contracts.client_id', '=', 'clients.id')
                                     ->join('tycoon_group_companies', 'contracts.company_id', '=', 'tycoon_group_companies.id')
                                     ->join('tickets', 'contracts.id', '=', 'tickets.contract_id')
                                     ->select('contracts.name', 'contracts.uniCode',
                                     'contracts.start_date','contracts.end_date',
+                                    'contracts.active', 'contracts.type',
                                     'contracts.totHours', DB::raw("SUM(tickets.workTime + tickets.extraTime) as hours"),
                                     DB::raw("ROUND((SUM(tickets.workTime + tickets.extraTime)/contracts.totHours)*100) as perc_ore_utiizzate"),
                                     'tycoon_group_companies.businessName as Società del gruppo',
@@ -396,13 +401,17 @@ class ContractController extends Controller
         if (Auth::user()['role'] == 'admin') {
 
             $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
-            $searchedS = isset($dff['searchedS']) ? strtolower($dff['searchedS']) : null;
+            $contractS = isset($dff['contractS']) ? strtolower($dff['contractS']) : null;
+            $contractT = isset($dff['contractT']) ? strtolower($dff['contractT']) : null;
 
             if ($searchedC) {
                 $contracts = $contracts->where('clients.id', $searchedC);
             }
-            if ($searchedS) {
-                $contracts = $contracts->where('tycoon_group_companies.id', $searchedS);
+            if ($contractS) {
+                $contracts = $contracts->where('contracts.active', $contractS);
+            }
+            if ($contractT) {
+                $contracts = $contracts->where('contracts.type', $contractT);
             }
 
         } else {
@@ -412,14 +421,27 @@ class ContractController extends Controller
             $companyName  = $company[0];
 
             $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
+            $contractS = isset($dff['contractS']) ? strtolower($dff['contractS']) : null;
+            $contractT = isset($dff['contractT']) ? strtolower($dff['contractT']) : null;
 
             if ($searchedC) {
                 $contracts = $contracts->where('clients.id', $searchedC);
+            }
+            if ($contractS) {
+                $contracts = $contracts->where('contracts.active', $contractS);
+            }
+            if ($contractT) {
+                $contracts = $contracts->where('contracts.type', $contractT);
             }
 
         }
 
         $contracts = $contracts->get();
+        /* echo '<pre>';
+        print_r($contracts);
+        echo '</pre>';
+
+        die(); */
 
         return Excel::download(new ContractsExport($contracts), 'contracts.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 

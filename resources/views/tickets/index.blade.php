@@ -50,7 +50,7 @@ $getParams = $_GET;
                     @endif
                 </div>
                 <div class="form-group col-2">
-                    <label for="startingDR">Data Ticket da ...</label>
+                    <label for="startingDR">Ticket da ...</label>
                     @if (old('startingDR'))
                         <input type="date" name="startingDR" value="{{ old('startingDR') }}" class="form-control">
                     @else 
@@ -58,7 +58,7 @@ $getParams = $_GET;
                     @endif
                 </div>
                 <div class="form-group col-2">
-                    <label for="endingDR">Data Ticket a ...</label>
+                    <label for="endingDR">Ticket a ...</label>
                     @if (old('endingDR'))
                         <input type="date" name="endingDR" value="{{ old('endingDR') }}" class="form-control">
                     @else 

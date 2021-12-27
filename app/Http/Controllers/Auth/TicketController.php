@@ -753,6 +753,11 @@ class TicketController extends Controller
             'searchedCDC',
         ]);
 
+        /* echo '<pre>';
+        print_r($dff);
+        echo '</pre>';
+        die(); */
+
         $params = [];
         $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
         $startingDR = isset($dff['startingDR']) ? $dff['startingDR'] : null;
@@ -766,7 +771,8 @@ class TicketController extends Controller
                             ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
+                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente',
+                                    'contracts.name', 'contracts.uniCode', 'tickets.id',
                                     'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy');
             
         } else {// user normale
@@ -778,7 +784,8 @@ class TicketController extends Controller
                             ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 'tickets.id',
+                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 
+                                    'contracts.name', 'contracts.uniCode', 'tickets.id',
                                     'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
             
@@ -797,10 +804,15 @@ class TicketController extends Controller
             $tickets = $tickets->where('contracts.client_id', $searchedC);
         }
         if ($searchedCDC) {
-            $tickets = $tickets->where('contracts.client_id', $searchedCDC);
+            $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
         }
 
         $tickets = $tickets->get();
+
+        /* echo '<pre>';
+        print_r($tickets);
+        echo '</pre>';
+        die(); */
 
         return Excel::download(new TicketsExport($tickets), 'tickets.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 

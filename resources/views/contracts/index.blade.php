@@ -98,9 +98,8 @@
         <form action="{{ route('contracts.exportCON') }}" method="GET">
             @csrf
             <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
-            @if (Auth::user()['role'] == 'admin')
-                <input type="hidden" name="searchedS" value="{{ $searchedS ?? '' }}">
-            @endif
+            <input type="hidden" name="contractS" value="{{ $contractS ?? '' }}">
+            <input type="hidden" name="contractT" value="{{ $contractT ?? '' }}">
             <button type="submit" class="btn btn-info">Scarica dati</button>
         </form>
     </div>
