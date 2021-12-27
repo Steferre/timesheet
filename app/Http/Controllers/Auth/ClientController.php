@@ -52,7 +52,9 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('clients.create');
+        $cdcs = Cdc::all();
+
+        return view('clients.create', ['cdcs' => $cdcs]);
     }
 
     /**
@@ -115,6 +117,8 @@ class ClientController extends Controller
         echo '</pre>';
         die(); */
 
+        $client->cdcs()->sync($data['cdc_id']);
+
         return redirect()->route('clients.index');
 
     }
@@ -129,7 +133,9 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
 
-        return view('clients.show', ['client' => $client]);
+        $cdcs = $client->cdcs()->where('clientID', $id)->get();
+        
+        return view('clients.show', ['client' => $client, 'cdcs' => $cdcs]);
     }
 
     /**

@@ -14,14 +14,17 @@ class CreateCdcsClientsTable extends Migration
     public function up()
     {
         Schema::create('cdcs_clients', function (Blueprint $table) {
+            $table->unsignedBigInteger('cdcID');
+            $table->foreign('cdcID')
+                    ->references('id')->on('cdcs');
+
             $table->unsignedBigInteger('clientID');
             $table->foreign('clientID')
                     ->references('id')->on('clients');
 
-            $table->unsignedBigInteger('cdcID');
-            $table->foreign('cdcID')
-                    ->references('id')->on('cdcs');
-                            
+            $table->primary(['cdcID', 'clientID']);
+
+            $table->timestamps();
         });
     }
 

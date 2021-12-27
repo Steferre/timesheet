@@ -31,10 +31,8 @@ class ContractController extends Controller
             'contractT',
         ]); // dff = data from filters
 
-        /* echo '<pre>';
-        var_dump($dff);
-        echo '</pre>';
-        die(); */
+        $today = date('Y-m-d'); 
+        
         // se sono admin posso vedere tutti i contratti
         if ($loggedUser['role'] == 'admin') {
 
@@ -49,6 +47,27 @@ class ContractController extends Controller
                 
                 for ($i=0; $i < $numContratti; $i++) { 
                     $contract = $contracts[$i];
+
+                    /* echo '<pre>';
+                    echo $today;
+                    echo '<pre>';
+                    echo $contract->end_date;
+                    echo '<pre>';
+                    var_dump($today < $contract->end_date);
+                    echo '<pre>'; */
+                    
+                    if ($today > $contract->end_date){
+                        //allora il contratto deve chiudersi
+                        if ($contract->active == 'Y') {
+                            $contract->active = 'N';
+                            $contract->save();
+                        }
+                    }
+                    /* echo '<pre>';
+                    var_dump($contract);
+                    echo '<pre>'; */
+                    
+
                     
                     $contract->start_date = date("d-m-Y", strtotime($contract->start_date));
                     $contract->end_date = date("d-m-Y", strtotime($contract->end_date));
@@ -57,7 +76,8 @@ class ContractController extends Controller
                     $contract->hours = DB::table('contracts')
                                         ->join('tickets', 'contracts.id', '=', 'tickets.contract_id')
                                         ->where('tickets.contract_id', $contract->id)
-                                        ->sum(DB::raw('tickets.workTime + tickets.extraTime'));                 
+                                        ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
+                               
                 }
 
                 return view('contracts.index', [

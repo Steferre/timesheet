@@ -69,6 +69,12 @@
                     <input type="text" name="postalCode" value="{{ old('postalCode') }}" placeholder="opzionale" class="form-control">
                 </div> 
             </div>
+            @foreach($cdcs as $cdc)
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" value="{{ $cdc->id }}" name="cdc_id[]" id="{{ $cdc->id }}">
+                <label class="custom-control-label" for="{{ $cdc->id }}">{{ $cdc->businessName }}</label>
+            </div>
+            @endforeach
             <div class="form-group">
                 <button type="submit" class="btn btn-primary mt-2">INVIA</button>
             </div>
