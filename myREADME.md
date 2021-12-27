@@ -68,8 +68,8 @@ oltre la data di fine il contratto si chiude automaticamente
 fare diverse view per vedere i contratti, solo quelli attivi, solo quelli chiusi o tutti
 
 ## ANNOTAZIONI
-per quanto riguarda la scelta del centro di costo quando si va a creare il ticket devo avere visibile tutta la lista in quanto posso selezionare un centro di costo qualsiasi (per ipotesi, se fosse il primo ticket non avrei collegamenti con questo cont)
-ipotesi giornata di lavoro di 8 ore divisa in 4 interventi di 2 ore ciascuno per 4 centri di costo diversi, al termine della giornata io dovrò registrare 4 ticket ognuno di 2 ore, il pacchetto/contratto/cliente che ha stipulato questo pacchetto è sempre lo stesso.
+per quanto riguarda la scelta del centro di costo quando si va a creare il ticket devo avere visibile tutta la lista in quanto posso selezionare un centro di costo qualsiasi.
+ipotesi giornata di lavoro di 8 ore divisa in 4 interventi di 2 ore ciascuno per 4 centri di costo diversi, al termine della giornata io dovrò registrare 4 ticket ognuno di 2 ore, il pacchetto/contratto/cliente è sempre lo stesso.
 se quando vado ad inserire i ticket ho una lista filtrata di centri di costo (MAGARI POTREI NON VEDERE UN CDC NUOVO PER CUI QUEL GIORNO HO SVOLTO IL PRIMO INTERVENTO E NON AVEVA ANCORA IL LEGAME CON IL CLIENTE/CONTRATTO)
 domanda: sarebbe preferibile lasciare visibile tutta la lista dei centri di costo, quando si vanno a creare i ticket
 e qualora si volesse limitarli, si potrebbe prevedere una scelta dei centri di costo quando si va a creare il cliente o il contratto?

@@ -142,27 +142,29 @@ class ContractController extends Controller
             // parto a preparare la query per trovare i contratti che posso mostrare
             $contracts = Contract::join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                                     ->select('contracts.*')
-                                    ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%')
-                                    ->paginate(10);
-
-            $numContratti = count($contracts);
-            
-            for ($i=0; $i < $numContratti; $i++) { 
-                $contract = $contracts[$i];
-                                            
-                $contract->start_date = date("d-m-Y", strtotime($contract->start_date));
-                $contract->end_date = date("d-m-Y", strtotime($contract->end_date));
-                                            
-                                            
-                $contract->hours = DB::table('tickets')
-                                ->where('tickets.contract_id', $contract->id)
-                                ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
-                                                                                            
-            }
+                                    ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
                 
             if (count($dff) == 0) {
                 // filtro non attivo 
                 // passo i contratti recuperati
+
+                $contracts = $contracts->paginate(10);
+
+                $numContratti = count($contracts);
+            
+                for ($i=0; $i < $numContratti; $i++) { 
+                    $contract = $contracts[$i];
+                                                
+                    $contract->start_date = date("d-m-Y", strtotime($contract->start_date));
+                    $contract->end_date = date("d-m-Y", strtotime($contract->end_date));
+                                                
+                                                
+                    $contract->hours = DB::table('tickets')
+                                    ->where('tickets.contract_id', $contract->id)
+                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
+                                                                                                
+                }
+
                 return view('contracts.index', [
                     'contracts' => $contracts,
                     'loggedUser' => $loggedUser,  
@@ -172,6 +174,8 @@ class ContractController extends Controller
             } else {
                 // filtro attivo
                 $searchedC = isset($dff['searchedC']) ? strtolower($dff['searchedC']) : null;
+                $contractS = isset($dff['contractS']) ? strtolower($dff['contractS']) : null;
+                $contractT = isset($dff['contractT']) ? strtolower($dff['contractT']) : null;
                 
                 if ($searchedC) {
                     $contracts = $contracts->where('client_id', $searchedC);
@@ -181,6 +185,23 @@ class ContractController extends Controller
                 }
                 if ($contractT) {
                     $contracts = $contracts->where('contracts.type', $contractT);
+                }
+
+                $contracts = $contracts->paginate(10);
+
+                $numContratti = count($contracts);
+            
+                for ($i=0; $i < $numContratti; $i++) { 
+                    $contract = $contracts[$i];
+                                                
+                    $contract->start_date = date("d-m-Y", strtotime($contract->start_date));
+                    $contract->end_date = date("d-m-Y", strtotime($contract->end_date));
+                                                
+                                                
+                    $contract->hours = DB::table('tickets')
+                                    ->where('tickets.contract_id', $contract->id)
+                                    ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
+                                                                                                
                 }
 
                 return view('contracts.index', [
@@ -357,7 +378,8 @@ class ContractController extends Controller
     {
         $dff = $request->only([
             'searchedC',
-            'searchedS',
+            'contractS',
+            'contractT',
         ]);
 
         $contracts = Contract::join('clients', 'contracts.client_id', '=', 'clients.id')
