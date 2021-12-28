@@ -451,7 +451,7 @@ class TicketController extends Controller
                 // siamo nell'ultimo 10% di ore disponibili
                 $ticket->save();
 
-                if ($data['cdc_id'] == null) {
+                /* if ($data['cdc_id'] == null) {
 
                     $client->cdcs()->attach($newCDC['id']);
         
@@ -459,7 +459,7 @@ class TicketController extends Controller
         
                     $client->cdcs()->attach($data['cdc_id']);
         
-                }
+                } */
 
                 return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di Ore rimaste disponibili < 10%");
 
@@ -475,7 +475,7 @@ class TicketController extends Controller
                 $contract->save();
 
                 // devo sempre salvare la relazione enlla tabella pivot
-                if ($data['cdc_id'] == null) {
+                /* if ($data['cdc_id'] == null) {
 
                     $client->cdcs()->attach($newCDC['id']);
         
@@ -483,7 +483,7 @@ class TicketController extends Controller
         
                     $client->cdcs()->attach($data['cdc_id']);
         
-                }
+                } */
 
                 return redirect('tickets')->with("warning", "ATTENZIONE!!! " . "Le ore disponibili per il contratto: " . $contract->name . " " . "sono terminate! Il contratto è quindi stato chiuso");
 
@@ -491,7 +491,7 @@ class TicketController extends Controller
 
                 $ticket->save();
 
-                if ($data['cdc_id'] == null) {
+                /* if ($data['cdc_id'] == null) {
 
                     $client->cdcs()->attach($newCDC['id']);
         
@@ -499,7 +499,7 @@ class TicketController extends Controller
         
                     $client->cdcs()->attach($data['cdc_id']);
         
-                }
+                } */
 
                 return redirect()->route('tickets.index');
             }
@@ -519,7 +519,7 @@ class TicketController extends Controller
             // salvo il nuovo ticket
             $ticket->save();
             // per compilare la tabella pivot di cdc e client
-            if ($data['cdc_id'] == null) {
+            /* if ($data['cdc_id'] == null) {
 
                 $client->cdcs()->attach($newCDC['id']);
     
@@ -527,7 +527,7 @@ class TicketController extends Controller
     
                 $client->cdcs()->attach($data['cdc_id']);
     
-            }
+            } */
 
             /* echo '<pre>';
             print_r($clientCompany);

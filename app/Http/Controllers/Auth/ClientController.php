@@ -148,7 +148,14 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
 
-        return view('clients.edit', ['client' => $client]);
+        // nella finestra di modifica devo fornire tutti i cdcs 
+        // e confrontarli con quelli selezionati in fase di creazione
+        // per permettere l'aggiunta di cdcs nuovi
+        $cdcs = $client->cdcs()->where('clientID', $id)->get();
+
+        $allCdcs = Cdc::all();
+
+        return view('clients.edit', ['client' => $client, 'cdcs' => $cdcs, 'allCdcs' => $allCdcs]);
     }
 
     /**
@@ -178,9 +185,46 @@ class ClientController extends Controller
         $client = Client::findOrFail($id);
 
         /* echo '<pre>';
-        print_r($client);
-        echo '</pre>';
-        die(); */
+        print_r($data['cdc_id']);
+        echo '</pre>'; */
+        
+        // prima di fare l'update devo controllare che i cdc selezionati siano o meno già presenti come relazione
+        // se ci sono già non metterli più
+        // se non ci sono aggiungerli
+        // se vengono tolti, eliminarli
+        // trovo la lunghezza del nuovo array di cdc selezionati nell'area di modifica
+        $numCDC = count($data['cdc_id']);
+        /* echo '<pre>';
+        echo $numCDC;
+        echo '</pre>'; */
+
+        // trovo i cdc già presenti
+        $cdcs = $client->cdcs()->where('clientID', $id)->get();
+        $numOldCdc = count($cdcs);
+        /* echo '<pre>';
+        print_r($cdcs);
+        echo '</pre>'; */
+        
+        if ($numOldCdc > 0) {
+
+            for ($i=0; $i < $numOldCdc; $i++) {
+                // ottengo l'id di ogni centro di costo già selezionato al momento della creazione 
+                $cdcID = $cdcs[$i]['id'];
+                // vado a togliere il link con la tabella pivot
+                $client->cdcs()->detach($cdcID);
+                /* echo '<pre>';
+                echo 'detach eseguito';
+                echo '</pre>'; */
+            }
+
+        } else {
+            //echo 'non ci sono cdc selezionati';
+        }
+
+        // adesso salvo i nuovi cdc selezionati
+        $client->cdcs()->attach($data['cdc_id']);
+        // proviamo la funzione updating existing pivot
+        //$client->cdcs()->updateExistingPivot($data['cdc_id'], []);
 
         $client->update($data);
 

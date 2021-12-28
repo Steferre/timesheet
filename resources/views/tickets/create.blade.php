@@ -34,6 +34,8 @@
                 const companies = resp.data.companies;
                 // lista utenti
                 const users = resp.data.users;
+                /* // lista dei legami tra clienti e cdc 
+                const clientCDCs = resp.data.;  */
 
                 // seleziono i campi input con il quale devo interagire
                 const selectedContract = document.getElementById("contract_id");
@@ -61,7 +63,28 @@
                                 return client;
                             }
                         });
+                        console.log(client);
                         cliente.value =  client.businessName;
+                        // QUI CHIAMATA PER OTTENERE I CDC LEGATI AL CLIENTE
+                        axios({
+                            method: "get",
+                            url: "/api/tickets/getCDCs",
+                            params: {
+                                'id' : client.id,
+                            },
+                        }).then((resp) => {
+                            const cdcs = resp.data.cdcs;
+                            console.log(cdcs);
+                            const infoBox = document.getElementById("infoBox");
+
+                            for (let i = 0; i < cdcs.length; i++) {
+                                const cdc = cdcs[i];
+
+                                infoBox.innerHTML += `<option value="${cdc['id']}">${cdc['businessName']}</option>`;
+                            }
+
+
+                        });
 
                         // adesso ho necessità di sapere l'azienda del gruppo
                         // in quanto devo permettere di scegliere solo tra gli appartenenti a quella azienda
@@ -233,9 +256,9 @@
             <div class="form-group col-3">
                 <select name="cdc_id" id="infoBox" style="display: none;" class="form-control custom-select">
                     <option value="">opzionale</option>
-                    @foreach ($cdcs as $cdc)
+                    <!-- @foreach ($cdcs as $cdc)
                         <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
-                    @endforeach
+                    @endforeach -->
                 </select>
             </div>
         </div>

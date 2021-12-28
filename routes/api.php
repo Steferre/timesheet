@@ -23,3 +23,4 @@ Route::get('/contracts', 'App\Http\Controllers\Api\ContractController@index');
 Route::get('/contracts/filter', 'App\Http\Controllers\Api\ContractController@filter');
 // rotta api per i ticket
 Route::get('/tickets', 'App\Http\Controllers\Api\TicketController@index');
+Route::get('/tickets/getCDCs', 'App\Http\Controllers\Api\TicketController@getCDCs');

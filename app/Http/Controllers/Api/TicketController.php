@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Contract;
 use App\Models\Client;
+use App\Models\Cdc;
 use App\Models\TycoonGroupCompany;
 use App\Models\Ticket;
 use App\Models\User;
@@ -30,6 +31,19 @@ class TicketController extends Controller
             'clients' => $clients,
             'companies' => $companies,
             'users' => $users,
+        ]);
+    }
+
+    public function getCDCs(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $client = Client::findOrFail($id);
+        // trovo i centri di costo che sono legati al cliente in questione
+        $cdcs = $client->cdcs()->where('clientID', $id)->get();
+        return response()->json([
+            'success' => true,
+            'cdcs' => $cdcs,
         ]);
     }
 

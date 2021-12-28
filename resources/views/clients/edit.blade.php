@@ -10,7 +10,7 @@
 @stop 
 
 @section('content')
-    <div class="mx-auto p-5">
+    <div class="mx-auto">
         <!--parte di codice che mostra eventuali errori quando si compila il form di modifica del cliente-->
         @if ($errors->any())
             <div>
@@ -25,7 +25,7 @@
         <form action="{{ route('clients.update', $client->id) }}" method="POST">
             @csrf
             @method('PATCH')
-            <div class="form-row">    
+            <div class="form-row mt-5">    
                 <div class="form-group col-4">
                     <label for="businessName">Ragione Sociale</label>
                     <input type="text" name="businessName" value="{{ $client->businessName }}" class="form-control">
@@ -69,6 +69,21 @@
                 <div class="form-group col-3">
                     <label for="phone">Telefono</label>
                     <input type="text" name="phone" value="{{ $client->phone }}" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <strong>Scegli i Centri di Costo associati all'Azienda: </strong>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    @foreach($allCdcs as $singleCdc)
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input <?php foreach($cdcs as $cdc) if ($singleCdc->id == $cdc->id) echo "checked";?> type="checkbox" class="custom-control-input" value="{{ $singleCdc->id }}" name="cdc_id[]" id="{{ $singleCdc->id }}">
+                            <label class="custom-control-label" for="{{ $singleCdc->id }}">{{ $singleCdc->businessName }}</label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
             <div class="form-group">
