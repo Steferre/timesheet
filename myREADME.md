@@ -75,3 +75,12 @@ domanda: sarebbe preferibile lasciare visibile tutta la lista dei centri di cost
 e qualora si volesse limitarli, si potrebbe prevedere una scelta dei centri di costo quando si va a creare il cliente o il contratto?
 (quando vado a creare il nuovo cliente SO GIA' I SUOI CENTRI DI COSTO? 
 quando creo i contratti posso selezionare i centri di costo alla quale si possono associare ticket?)
+
+## AGGIUNTE IN DATA 28-12-2021
+modificata relazione tra azienda cliente e centri di costo, ora in fase di creazione di una nuova azienda cliente, si devono scegliere i centri di costo associati.
+questo ci permette tramite js e una chiamata axios di mostrare la lista dei centri di costo ai quali si possono associare ticket, non appena viene scelto il contratto sul quale aprire il ticket
+
+## DA CONTROLLARE E MODIFICARE
+controllare il comportamento quando si arriva alla creazione di un nuovo ticket direttamente dal contratto (RISOLTO)
+controllare comportamento quando ci sono più contratti tra i quali scegliere, se la lista dei cdc si svuota o meno (RISOLTO)
+quando inserisco una nuova azienda cliente controllare se esiste già come centro di costo prima di inserirla anche come cdc

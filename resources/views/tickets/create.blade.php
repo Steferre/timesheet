@@ -77,10 +77,21 @@
                             console.log(cdcs);
                             const infoBox = document.getElementById("infoBox");
 
+                            if (document.querySelectorAll("#myCdc").length > 0){
+                                console.log(document.querySelectorAll("#myCdc"));
+                                const nodeList = document.querySelectorAll("#myCdc");
+
+                                for (let i = 0; i < nodeList.length; i++) {
+                                    const option = nodeList[i];
+
+                                    infoBox.removeChild(option);    
+                                }
+                            };
+
                             for (let i = 0; i < cdcs.length; i++) {
                                 const cdc = cdcs[i];
 
-                                infoBox.innerHTML += `<option value="${cdc['id']}">${cdc['businessName']}</option>`;
+                                infoBox.innerHTML += `<option id="myCdc" value="${cdc['id']}">${cdc['businessName']}</option>`;
                             }
 
 
@@ -150,6 +161,11 @@
         </div>
     </div>
 @stop
+
+@php 
+    $result = isset($contract);
+    var_dump($result);
+@endphp
 
 @section('content')
     <!--parte di codice che mostra eventuali errori quando si compila il form di creazione del nuovo ticket-->
@@ -256,9 +272,11 @@
             <div class="form-group col-3">
                 <select name="cdc_id" id="infoBox" style="display: none;" class="form-control custom-select">
                     <option value="">opzionale</option>
-                    <!-- @foreach ($cdcs as $cdc)
-                        <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
-                    @endforeach -->
+                    @if ($result)
+                        @foreach ($cdcs as $cdc)
+                            <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
         </div>

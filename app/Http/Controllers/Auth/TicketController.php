@@ -243,7 +243,7 @@ class TicketController extends Controller
         // se creo un ticket sapendo già il contratto posso usare una via
         // nel caso in cui il contratto lo scelgo durante la creazione
         // devo usare js per dispensare solo i cdc legati al cliente scelto in base al contratto
-        $cdcs = Cdc::all();
+        //$cdcs = Cdc::all();
 
 
         // se sono admin vedo tutti gli utenti
@@ -261,6 +261,14 @@ class TicketController extends Controller
         if (isset($data['slug'])) {
 
             $contract = Contract::where('slug', $data['slug'])->first();
+
+            //trovo anche il cliente per risalire ai cdc correlati
+            $client = $contract->client;
+            $cdcs = $client->cdcs()->where('clientID', $client['id'])->get();
+            /* echo '<pre>';
+            print_r($cdcs);
+            echo '</pre>';
+            die(); */
 
             // prima di dispensare la view che permette la creazione del ticket
             // verificare che il contratto sia attivo
@@ -315,7 +323,7 @@ class TicketController extends Controller
                     'contracts' => $contracts,
                     'activeUser' => $activeUser,
                     'users' => $users,
-                    'cdcs' => $cdcs,
+                    //'cdcs' => $cdcs,
                 ]);
             } else if (count($_GET) == 0 && Auth::user()['role'] == 'user') {
                 // devo far scegliere solo tra i contratti aperti dall'azienda di appartenenza dell'user e che sono attivi
@@ -334,7 +342,7 @@ class TicketController extends Controller
                     'contracts' => $contracts,
                     'activeUser' => $activeUser,
                     'users' => $users,
-                    'cdcs' => $cdcs,
+                    //'cdcs' => $cdcs,
                 ]);
 
             } else {

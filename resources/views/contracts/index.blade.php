@@ -71,18 +71,15 @@
                         $result = isset($contractT);
                     @endphp
                     <select name="contractT" class="form-control">
-                        <option value="">Seleziona il tipo di contratto</option>
-                        @foreach($contracts as $contract)
-                            @if(!$result)
-                                @if($contract->type == 'increase')
-                                    <option value="{{ $contract->type }}">Accumulo</option>
-                                @else
-                                    <option value="{{ $contract->type }}">Decremento</option>
-                                @endif
-                            @else
-                                <option <?php if ($contract->type == $contractT) echo "selected";?> value="{{ $contract->type }}">{{ $contract->type }}</option>
-                            @endif
-                        @endforeach
+                        @if(!$result)
+                            <option value="">Seleziona il tipo di contratto</option>
+                            <option value="increase">Accumulo</option>
+                            <option value="decrease">Decremento</option>
+                        @else
+                            <option <?php if ($contractT == null) echo "selected";?> value="">Seleziona il tipo di contratto</option>
+                            <option <?php if ($contractT == "increase") echo "selected";?> value="increase">Accumulo</option>
+                            <option <?php if ($contractT == "decrease") echo "selected";?> value="decrease">Decremento</option>
+                        @endif
                     </select>
                 </div>
                 <div class="form-group col-3">
@@ -132,7 +129,7 @@
                     <td>{{ $contract->name }}</td>
                     <td>{{ $contract->uniCode }}</td>
                     <td>{{ $contract->start_date }}</td>
-                    <td>{{ $contract->type }}</td>
+                    <td><?php if($contract->type == 'increase') {echo 'accumulo';} else {echo 'decremento';} ?></td>
                     @if ($contract->totHours != null)
                     <td>{{ $contract->totHours }}</td>
                     <td>{{ $contract->hours }}</td>
