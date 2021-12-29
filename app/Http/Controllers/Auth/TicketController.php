@@ -378,6 +378,8 @@ class TicketController extends Controller
         print_r($data);
         echo '</pre>';
         die(); */
+        // trovo la data odierna, mi servirà in alcuni controlli
+        $today = date('Y-m-d');
 
         if ($data['extraTime'] == null) {
             $data['extraTime'] = 0;
@@ -512,9 +514,8 @@ class TicketController extends Controller
                 return redirect()->route('tickets.index');
             }
 
-        } else {
-            // caso in cui la tipologia del contratto sia di ACCUMULO ORE
-            // non essendoci un tetto
+        } else {// contratto ACCUMULO ORE
+
             // le ore vengono sommate, tenendo in considerazione sia le ore dell'user sia quelle extra dell'admin
             $inputHours = ($data['workTime'] + $data['extraTime']);
             $usedHours = ($contract->hours + $inputHours);
@@ -522,26 +523,36 @@ class TicketController extends Controller
             // echo $usedHours;
             // die();
 
-            // recupero l'azienda cliente
-            $clientCompany = $contract->client;
-            // salvo il nuovo ticket
-            $ticket->save();
-            // per compilare la tabella pivot di cdc e client
-            /* if ($data['cdc_id'] == null) {
-
-                $client->cdcs()->attach($newCDC['id']);
-    
-            } else {
-    
-                $client->cdcs()->attach($data['cdc_id']);
-    
-            } */
-
-            /* echo '<pre>';
-            print_r($clientCompany);
-            echo '</pre>';
+            // presenta una data di chiusura del contratto
+            // trovo quando mancano due settimane alla data di chiusura
+            $endDate = $contract['end_date'];
+            /* echo 'data fine contratto: ' . $endDate;
+            echo '<pre>'; */
+            // adesso tolgo 15 giorni alla data di fine, per avere una data di controllo per mandare un messaggio
+            // che segnala che ci si stà avvicinando alla fine del contratto stipulato
+            $date = date_create($endDate);
+            $warningDate = date_format(date_sub($date, date_interval_create_from_date_string('15 days')), 'Y-m-d'); 
+            /* echo 'data di allerta: ' . $warningDate;
+            echo '<pre>';
+            echo 'oggi: ' . $today;
             die(); */
-            return redirect()->route('tickets.index');
+
+            if ($today > $warningDate && $endDate > $today) {
+                // siamo all'interno degli ultimi 15 gg di contratto
+                $ticket->save();
+
+                return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Mancano meno di 10 giorni lavorativi alla data di chiusura del contratto!!");
+                
+            } else {
+                // ancora mancano più di 15 giorni alla fine del contratto salvo solo il ticket senza segnalare nulla
+                $ticket->save();
+
+                return redirect()->route('tickets.index');
+
+            }
+            
+            // recupero l'azienda cliente
+            // $clientCompany = $contract->client;
         }    
     }
 

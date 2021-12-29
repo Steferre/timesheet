@@ -202,17 +202,13 @@
                     <select name="contract_id" id="contract_id" class="form-control custom-select">
                         <option value="">Scegli il contratto su cui attivare il ticket</option>
                         @foreach($contracts as $contract)
-                            <option <?php if ($contract->id == old('contract_id')) echo "selected";?> value="{{ $contract->id }}">{{ $contract->name }}</option>
+                            <option value="{{ $contract->id }}">{{ $contract->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-4">
                     <label for="cliente">Cliente</label>
-                    @if(!old('cliente'))
                     <input type="text" id="cliente" name="cliente"  readonly class="form-control">
-                    @else
-                    <input type="text" id="cliente" name="cliente"  value="{{ old('cliente') }}"readonly class="form-control">
-                    @endif
                 </div>
                 <div class="form-group col-4">
                     <label for="openBy">Aperto</label>

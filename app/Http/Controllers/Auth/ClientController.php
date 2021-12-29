@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Cdc;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
@@ -105,17 +106,28 @@ class ClientController extends Controller
         // questo perchè quando il ticket viene creato per l'azienda direttamente cliente
         // la stessa azienda è anche un centro di costo
         $dataForCdc = $request->only('businessName');
-
-        $cdc = new Cdc();
-
-        $cdc['businessName'] = $dataForCdc['businessName'];
-
-        $cdc->save();
-
         /* echo '<pre>';
         print_r($dataForCdc);
-        echo '</pre>';
-        die(); */
+        echo '</pre>'; */
+        $cdcFounded = Cdc::where('businessName', $dataForCdc)->count('businessName');
+        /* echo '<pre>';
+        echo $cdcFounded;
+        echo '</pre>'; */
+        //die();
+        // se non c'è nella lista dei centri di costo, viene inserito
+        if ($cdcFounded == 0) {
+            // la query non  ha trovato risultati
+            $cdc = new Cdc();
+
+            $cdc['businessName'] = $dataForCdc['businessName'];
+
+            $cdc->save();
+
+        } else {
+            // il cdc è già presente quindi non viene inserito di nuovo
+            echo 'cdc già presente';
+        }
+        
 
         $client->cdcs()->sync($data['cdc_id']);
 
@@ -244,6 +256,8 @@ class ClientController extends Controller
         
 
         if (count($client->contracts) == 0) {
+            $client->cdcs()->detach();
+            //die('prima di eliminare il cliente');
             $client->delete();
         }
 

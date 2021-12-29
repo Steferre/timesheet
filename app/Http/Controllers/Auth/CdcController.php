@@ -118,6 +118,14 @@ class CdcController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cdc = Cdc::findOrFail($id);
+        $clients = $cdc->clients()->where('cdcID', $id)->get();
+        echo '<pre>';
+        var_dump($clients);
+        echo '</pre>';
+
+
+        die('funzione ancora da scrivere');
+
     }
 }

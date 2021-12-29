@@ -56,12 +56,36 @@
         <thead class="thead-dark">
             <tr>
                 <th>Ragione Sociale</th>
+                <th>Num aziende clienti</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach($cdcs as $cdc)
                 <tr>
                     <td>{{ $cdc->businessName }}</td>
+                    <td>{{ count($cdc->clients) }}</td>
+                    @if(count($cdc->clients) > 0)
+                        <td title="info">
+                            <form method="POST" action="{{ route('cdcs.destroy', $cdc->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" id="deleteBtn" class="border-0 bg-transparent">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                            </form>
+                        </td>
+                        @else
+                        <td title="elimina contratto">
+                            <form method="POST" action="{{ route('cdcs.destroy', $cdc->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="confirmDelete()" id="deleteBtn" class="border-0 bg-transparent text-danger">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </form>
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
