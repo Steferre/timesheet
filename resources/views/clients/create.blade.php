@@ -10,7 +10,7 @@
 @stop    
 
 @section('content')
-    <div class="mx-auto p-5">
+    <div class="mx-auto">
         <!--parte di codice che mostra eventuali errori quando si compila il form di creazione del nuovo promoter-->
         @if ($errors->any())
             <div>
@@ -23,7 +23,7 @@
         @endif
         <form action="{{ route('clients.store') }}" method="POST">
             @csrf
-            <div class="form-row">    
+            <div class="form-row mt-5">    
                 <div class="form-group col-4">
                     <label for="businessName">Ragione Sociale</label>
                     <input type="text" name="businessName" value="{{ old('businessName') }}" class="form-control">
@@ -69,12 +69,19 @@
                     <input type="text" name="postalCode" value="{{ old('postalCode') }}" placeholder="opzionale" class="form-control">
                 </div> 
             </div>
-            @foreach($cdcs as $cdc)
-            <div class="custom-control custom-checkbox custom-control-inline">
-                <input type="checkbox" class="custom-control-input" value="{{ $cdc->id }}" name="cdc_id[]" id="{{ $cdc->id }}">
-                <label class="custom-control-label" for="{{ $cdc->id }}">{{ $cdc->businessName }}</label>
-            </div>
-            @endforeach
+            @if(count($cdcs) > 0)
+                <div class="form-row">
+                    <div class="form-group">
+                        <strong>Scegli i Centri di Costo associati all'Azienda: </strong>
+                    </div>
+                </div>
+                @foreach($cdcs as $cdc)
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" value="{{ $cdc->id }}" name="cdc_id[]" id="{{ $cdc->id }}">
+                    <label class="custom-control-label" for="{{ $cdc->id }}">{{ $cdc->businessName }}</label>
+                </div>
+                @endforeach
+            @endif    
             <div class="form-group">
                 <button type="submit" class="btn btn-primary mt-2">INVIA</button>
             </div>

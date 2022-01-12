@@ -83,4 +83,6 @@ questo ci permette tramite js e una chiamata axios di mostrare la lista dei cent
 ## DA CONTROLLARE E MODIFICARE
 controllare il comportamento quando si arriva alla creazione di un nuovo ticket direttamente dal contratto (RISOLTO)
 controllare comportamento quando ci sono più contratti tra i quali scegliere, se la lista dei cdc si svuota o meno (RISOLTO)
-quando inserisco una nuova azienda cliente controllare se esiste già come centro di costo prima di inserirla anche come cdc
+quando inserisco una nuova azienda cliente controllare se esiste già come centro di costo prima di inserirla anche come cdc (RISOLTO)
+
+controllare validazione date sulla creazione dei ticket, se si mette una data precedente all'inizo del contratto ti fa aprire lo stesso il ticket

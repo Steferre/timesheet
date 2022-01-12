@@ -128,8 +128,11 @@ class ClientController extends Controller
             echo 'cdc già presente';
         }
         
-
-        $client->cdcs()->sync($data['cdc_id']);
+        // se ci sono e vengono scelti dei centri di costo per la nuova azienda
+        // vengono associati
+        if ( isset($data['cdc_id']) ) {
+            $client->cdcs()->sync($data['cdc_id']);
+        } // se no si passa oltre
 
         return redirect()->route('clients.index');
 
@@ -183,13 +186,13 @@ class ClientController extends Controller
             'businessName' => 'required',
             'email' => 'required',
             'pIva' => 'required',
-            'address' => 'required',
-            'buldingNum' => 'required',
-            'city' => 'required',
-            'province' => 'required|max:2',
-            'country' => 'required',
-            'postalCode' => 'required|max:5',
-            'phone' => 'required|max:10',
+            'address' => 'nullable',
+            'buldingNum' => 'nullable',
+            'city' => 'nullable',
+            'province' => 'nullable|max:2',
+            'country' => 'nullable',
+            'postalCode' => 'nullable|max:5',
+            'phone' => 'nullable|max:10',
         ]);
 
         $data = $request->all();
@@ -199,24 +202,16 @@ class ClientController extends Controller
         /* echo '<pre>';
         print_r($data['cdc_id']);
         echo '</pre>'; */
-        
-        // prima di fare l'update devo controllare che i cdc selezionati siano o meno già presenti come relazione
-        // se ci sono già non metterli più
-        // se non ci sono aggiungerli
-        // se vengono tolti, eliminarli
-        // trovo la lunghezza del nuovo array di cdc selezionati nell'area di modifica
-        $numCDC = count($data['cdc_id']);
-        /* echo '<pre>';
-        echo $numCDC;
-        echo '</pre>'; */
 
+        // verifico la presenza di cdcs relazionati all'azienda in questione
         // trovo i cdc già presenti
         $cdcs = $client->cdcs()->where('clientID', $id)->get();
         $numOldCdc = count($cdcs);
         /* echo '<pre>';
-        print_r($cdcs);
-        echo '</pre>'; */
-        
+        print_r($numOldCdc);
+        echo '</pre>';
+        die(); */
+        // se ci sono centri di costo selezionati elimino la relazione con l'azienda
         if ($numOldCdc > 0) {
 
             for ($i=0; $i < $numOldCdc; $i++) {
@@ -232,9 +227,18 @@ class ClientController extends Controller
         } else {
             //echo 'non ci sono cdc selezionati';
         }
+        // quindi verifico se nel nuovo pacchetto di dati di update sia presente la voce cdc_id
+        if (isset($data['cdc_id'])) {
+            // se presente trovo la lunghezza del nuovo array di cdc selezionati nell'area di modifica
 
-        // adesso salvo i nuovi cdc selezionati
-        $client->cdcs()->attach($data['cdc_id']);
+            $numCDC = count($data['cdc_id']);
+            /* echo '<pre>';
+            echo $numCDC;
+            echo '</pre>'; */
+            // e procedo con il salvataggio dei nuovi cdc selezionati
+            
+            $client->cdcs()->attach($data['cdc_id']);
+        }
         // proviamo la funzione updating existing pivot
         //$client->cdcs()->updateExistingPivot($data['cdc_id'], []);
 
