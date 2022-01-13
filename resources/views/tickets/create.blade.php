@@ -164,7 +164,6 @@
 
 @php 
     $result = isset($contract);
-    var_dump($result);
 @endphp
 
 @section('content')
@@ -182,7 +181,7 @@
     <form action="{{ route('tickets.store') }}" method="POST">
         @csrf
         <div class="form-row">
-            @if(isset($contract))
+            @if($result)
                 <div class="form-group col-4">
                     <label for="contract_id">Contratto</label>
                     <input type="hidden" name="contract_id" value="{{ $contract->id }}">
@@ -221,9 +220,6 @@
                 <label for="performedBy">Eseguito</label>
                 <select name="performedBy" class="form-control custom-select">
                     <option value="">Scegli chi ha eseguito l'intervento</option>
-                    @if ($activeUser['role'] == 'admin')
-                        <option value="{{ $activeUser['name'] }}">{{ $activeUser['name'] }}</option>
-                    @endif
                     @foreach($users as $user)
                         <option <?php if ($user->name == old('performedBy')) echo "selected";?> value="{{ $user->name }}">{{ $user->name }}</option>
                     @endforeach
@@ -251,7 +247,10 @@
                 <label for="end_date">Data fine intervento</label>
                 <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control">
             </div>
-            <div class="form-group col-4">
+            <div class="offset-4"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-12">
                 <label for="comments">Commento intervento</label>
                 <input type="text" name="comments" value="{{ old('comments') }}" placeholder="riassumi l'intervento" class="form-control">
             </div>  

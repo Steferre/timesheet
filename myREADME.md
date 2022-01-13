@@ -1,4 +1,4 @@
-## Aggiornato in data 21/12/2021
+## Aggiornato in data 13/01/2022
 
 ## contracts views
 index  ok
@@ -85,4 +85,21 @@ controllare il comportamento quando si arriva alla creazione di un nuovo ticket 
 controllare comportamento quando ci sono più contratti tra i quali scegliere, se la lista dei cdc si svuota o meno (RISOLTO)
 quando inserisco una nuova azienda cliente controllare se esiste già come centro di costo prima di inserirla anche come cdc (RISOLTO)
 
-controllare validazione date sulla creazione dei ticket, se si mette una data precedente all'inizo del contratto ti fa aprire lo stesso il ticket
+controllare validazione date sulla creazione dei ticket, se si mette una data precedente all'inizo del contratto ti fa aprire lo stesso il ticket (RISOLTO)
+
+## CRITICITA' RISCONTRATE DA CORRADO 
+Creazione azienda cliente, mi ha richiesto alcuni campi obbligatori e altri opzionali che ho lasciato vuoti
+Nel form di inserimento mi mostra due checkbox (centri di costo); manca una label come invece è presente nel form edit
+Mi permette di salvare ma dopo aver salvato mostra un errore (screen1). Ciò nonostante il cliente risulta creato e anche il centro di costo con lo stesso nome (RISOLTO)
+ 
+Vado in edit dell’azienda cliente; i campi opzionali non sono più tali e sono diventati obbligatori, per cui sono vincolato a doverli aggiornare; il comportamento dei due form non è coerente (insert/edit).
+Anche qui sono presenti i centri di costoquesta volta con la label. (RISOLTO)
+
+Inserimento ticket:
+In alto a sx è presente il testo “bool(false)” immagino sia un debug da togliere
+l’elenco delle opzioni “eseguito” mi mostra due volte lo stesso utente (Screen 2)
+descrizione dell’intervento. Metterei il campo sulla riga successiva e aumenterei il numero di colonne che può occupare, in modo che per descrizioni più dettagliate sia visibile tutto il testo evitando uno scroll manuale (RISOLTO)
+
+elenco ticket:
+per ottimizzare lo spazio toglierei la colonna “aperto” e aumenterei lo spazio a disposzione del commento, per avere già in questo elenco un colpo d’occhio rispetto all’intervento.
+Ho eseguito una ricerca per azienda cliente selezionando dalle opzioni (screen_3), selezionando un’azienda che non ha ticket.  Lo screen con i risultati non mostra la selezione che ho fatto nelle options, mostra il messaggio , mostra il messaggio che non ci sono risultati (corretto) ma la table contiene lo stesso il ticket di lyve (che non dovrebbe mostrare). (RISOLTO)

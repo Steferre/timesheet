@@ -66,33 +66,27 @@ $getParams = $_GET;
                     @endif
                 </div>
                 <div class="form-group col-2">
-                    @php
-                    $result = isset($searchedC);
-                    @endphp
                     <label for="searchedC">Azienda Cliente</label>
                     <select name="searchedC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($clients as $client)
-                            @if(!$result)
-                                <option value="{{ $client->id }}">{{ $client->businessName }}</option>
+                            @if($client->id == old('searchedC'))
+                                <option value="{{ old('searchedC') }}" selected>{{ $client->businessName }}</option>
                             @else
-                                <option <?php if ($client->id == $searchedC) echo "selected";?> value="{{ $client->id }}">{{ $client->businessName }}</option>
+                                <option value="{{ $client->id }}">{{ $client->businessName }}</option>
                             @endif
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-2">
-                    @php
-                    $result = isset($searchedCDC);
-                    @endphp
                     <label for="searchedCDC">Centro di costo</label>
                     <select name="searchedCDC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($cdcs as $cdc)
-                            @if(!$result)
-                                <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
+                            @if($cdc->id == old('searchedCDC'))
+                                <option value="{{ old('searchedCDC') }}" selected>{{ $cdc->businessName }}</option>
                             @else
-                                <option <?php if ($cdc->id == $searchedCDC) echo "selected";?> value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
+                                <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -125,33 +119,35 @@ $getParams = $_GET;
         <thead class="thead-dark">
             <tr>
                 <th>Contratto</th>
-                <th>Aperto</th>
+                <!-- <th>Aperto</th> -->
                 <th>Eseguito</th>
                 <th>Durata intervento</th>
                 <th>Ore Extra Admin</th>
-                <th>Data Inizio</th>
-                <th>Data Fine</th>
+                <!-- <th>Data Inizio</th> -->
+                <th>Data</th>
                 <th>Commenti</th>
                 <th></th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
+        @if (Session::get('warning') == null)
         <tbody>
             @foreach($tickets as $ticket)
                 <tr>
                     <td>{{ $ticket->contract->name }}</td>
-                    <td>{{ $ticket->openBy }}</td>
+                    <!-- <td>{{ $ticket->openBy }}</td> -->
                     <td>{{ $ticket->performedBy }}</td>
                     <td>{{ $ticket->workTime }}</td>
                     <td>{{ $ticket->extraTime }}</td>
-                    <td>{{ date('d-m-Y', strtotime($ticket->start_date)) }}</td>
+                    <!-- <td>{{ date('d-m-Y', strtotime($ticket->start_date)) }}</td> -->
                     <td>{{ date('d-m-Y', strtotime($ticket->end_date)) }}</td>
-                    @if(strlen($ticket->comments) > 11)
+                    <!-- @if(strlen($ticket->comments) > 11)
                         <td>{{ substr($ticket->comments, 0, 11). ' ' . '...' }}</td>
                     @else
                         <td>{{ $ticket->comments }}</td>
-                    @endif
+                    @endif -->
+                    <td>{{ $ticket->comments }}</td>
                     @if(Auth::user()['name'] == $ticket->performedBy || Auth::user()['role'] == 'admin')
                         <td title="Modifica">
                             <a href="{{ route('tickets.edit', $ticket->id) }}">
@@ -196,6 +192,7 @@ $getParams = $_GET;
                 </tr>
             @endforeach
         </tbody>
+        @endif
     </table>
     {{ $tickets->appends(['contractN' => $contractN ?? "",
         'startingDR' => $startingDR ?? "",

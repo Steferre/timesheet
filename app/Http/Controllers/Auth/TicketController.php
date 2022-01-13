@@ -114,6 +114,7 @@ class TicketController extends Controller
 
                 } else {
                     // la ricerca non ha fornito risultati, perchè uno o più campi non sono corretti
+                    // quindi nella view non dovrò mostrare risultati 
                     return back()->with("warning", "La ricerca NON ha prodotto risultati, provare a cambiare i paramentri inseriti!")->withInput($request->input());
                 }
 
@@ -412,7 +413,37 @@ class TicketController extends Controller
 
         $newCDC = Cdc::where('cdcs.businessName', 'like', '%'. $client->businessName .'%')
                     ->select('cdcs.id')->first();
-
+        // controllo che la data di apertura del ticket sia uguale o successiva a quella di apertura del contratto
+        // in caso contrario blocco tutto
+        if (($data['start_date'] < $contract['start_date'])) {
+            return back()->with('error', 'ERRORE, la data di apertura del ticket non può essere precedente alla data di apertura del contratto!!!')->withInput($request->input());
+        }
+        // per la data di chiusura devo anche verificare se esiste oppure è nulla
+        // in quanto in base alla tipologia di contratto potrebbe non esserci
+        // controllo che la data di chiusura del ticket sia al massimo uguale a quella di chiusura del contratto
+        // oppure che sia precedente, in caso contrario blocco tutto
+        if ($contract['end_date'] !== null) {
+            if (($data['end_date'] > $contract['end_date'])) {
+                echo 'ERRORE, data di chiusura del ticket successiva alla data di chiusura del contratto!!!';
+            }
+        }
+        
+        /* echo '<pre>';
+        echo 'data chiusura contratto: ';
+        var_dump($contract['end_date']);
+        echo '</pre>';
+        echo '<pre>';
+        echo 'data chiusura ticket: ';
+        print_r($data['end_date']);
+        echo '</pre>';
+        echo '<pre>';
+        echo 'data chiusura ticket è successiva alla data chiusura contratto?: ';
+        var_dump(($data['end_date'] > null));
+        echo '</pre>';
+        echo '<pre>';
+        print_r($request->input());
+        echo '</pre>';
+        die(); */
         // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
         $ticket = new Ticket();
 
@@ -625,6 +656,21 @@ class TicketController extends Controller
                                     ->where('tickets.contract_id', $contract->id)
                                     ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
 
+        // controllo che la data di apertura del ticket sia uguale o successiva a quella di apertura del contratto
+        // in caso contrario blocco tutto
+        if (($data['start_date'] < $contract['start_date'])) {
+            return back()->with('error', 'ERRORE, la data di apertura del ticket non può essere precedente alla data di apertura del contratto!!!')->withInput($request->input());
+        }
+        // per la data di chiusura devo anche verificare se esiste oppure è nulla
+        // in quanto in base alla tipologia di contratto potrebbe non esserci
+        // controllo che la data di chiusura del ticket sia al massimo uguale a quella di chiusura del contratto
+        // oppure che sia precedente, in caso contrario blocco tutto
+        if ($contract['end_date'] !== null) {
+            if (($data['end_date'] > $contract['end_date'])) {
+                echo 'ERRORE, data di chiusura del ticket successiva alla data di chiusura del contratto!!!';
+            }
+        }
+        
         // nuove ore inserite 
         $modifiedTicketHours = ($data['workTime']) + ($data['extraTime']);
 
@@ -634,7 +680,7 @@ class TicketController extends Controller
         // quindi devo trovare la differenza tra le ore già presenti nel ticket e quelle dell'aggiornamento
         // e valutare se sono congrue con quanto detto sopra
         // ho bisogno anche di sapere quante ore mancano alla fine del contratto
-        echo '<pre>';
+        /* echo '<pre>';
         echo 'ore salvate nel ticket che sto modificando: ' . $savedTicketHours;
         echo '</pre>';
         echo '<pre>';
@@ -645,7 +691,7 @@ class TicketController extends Controller
         echo '</pre>';
         echo '<pre>';
         echo 'differenza tra ore originali e ore modificate: ' . $diffHours;
-        echo '</pre>';
+        echo '</pre>'; */
         
         //PROBABILE PUNTO DI SEPARAZIONE TRA TIPO DI CONTRATTO
         if ($contract['type'] == 'decrease') {
