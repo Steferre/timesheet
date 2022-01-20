@@ -151,6 +151,12 @@
     </script>
 @stop
 
+@php
+    $existStartDate = old('end_date') ? true : false;
+    $existEndDate = old('end_date') ? true : false;
+    $result = isset($contract);
+@endphp
+
 @section('headers')
     <div class="mb-5">
         <h1 class="">Nuovo Ticket</h1>
@@ -161,10 +167,6 @@
         </div>
     </div>
 @stop
-
-@php 
-    $result = isset($contract);
-@endphp
 
 @section('content')
     <!--parte di codice che mostra eventuali errori quando si compila il form di creazione del nuovo ticket-->
@@ -191,29 +193,33 @@
                     <label for="cliente">Cliente</label>
                     <input type="text" name="cliente" value="{{ $contract->client->businessName }}" readonly class="form-control">
                 </div>
-                <div class="form-group col-4">
-                    <label for="openBy">Aperto</label>
-                    <input type="text" name="openBy" value="{{ $activeUser->name }}" readonly class="form-control">
-                </div>
             @else
                 <div class="form-group col-4">
                     <label for="contract_id">Contratto</label>
                     <select name="contract_id" id="contract_id" class="form-control custom-select">
                         <option value="">Scegli il contratto su cui attivare il ticket</option>
                         @foreach($contracts as $contract)
-                            <option value="{{ $contract->id }}">{{ $contract->name }}</option>
+                            @if(old('contract_id') !== null)
+                                <option <?php if($contract->id == old('contract_id')) echo 'selected' ?> value="{{ $contract->id }}">{{ $contract->name }}</option>
+                            @else 
+                                <option value="{{ $contract->id }}">{{ $contract->name }}</option>
+                            @endif    
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-4">
                     <label for="cliente">Cliente</label>
-                    <input type="text" id="cliente" name="cliente"  readonly class="form-control">
-                </div>
-                <div class="form-group col-4">
-                    <label for="openBy">Aperto</label>
-                    <input type="text" name="openBy" value="{{ $activeUser->name }}" readonly class="form-control">
+                    @if(old('cliente') !== null)
+                        <input type="text" name="cliente" value="{{ old('cliente') }}" readonly class="form-control">
+                    @else
+                        <input type="text" id="cliente" name="cliente"  readonly class="form-control">
+                    @endif
                 </div>
             @endif
+            <div class="form-group col-4">
+                <label for="openBy">Aperto</label>
+                <input type="text" name="openBy" value="{{ $activeUser->name }}" readonly class="form-control">
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group col-4">
@@ -245,11 +251,19 @@
         <div class="form-row">  
             <div class="form-group col-4">
                 <label for="start_date">Data inizio intervento</label>
-                <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control">
+                @if($existStartDate)
+                    <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control">
+                @else
+                    <input type="date" name="start_date" value="{{ $today }}" class="form-control">
+                @endif
             </div>
             <div class="form-group col-4">
                 <label for="end_date">Data fine intervento</label>
-                <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control">
+                @if($existEndDate)
+                    <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control">
+                @else
+                    <input type="date" name="end_date" value="{{ $today }}" class="form-control">
+                @endif
             </div>
             <div class="offset-4"></div>
         </div>

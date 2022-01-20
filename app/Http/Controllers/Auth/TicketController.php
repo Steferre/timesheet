@@ -210,6 +210,9 @@ class TicketController extends Controller
         $emailPathArray = explode('.', $emailArray[1]);
         $activeUserCompanyName = $emailPathArray[0];
 
+        // trovo la data di odierna, per passarla alla view ed impostarla come default
+        $today = date('Y-m-d');
+
         // recupero gli utenti da passare alla view
         $users = User::all();
         
@@ -242,6 +245,7 @@ class TicketController extends Controller
                     'activeUser' => $activeUser,
                     'users' => $users,
                     'cdcs' => $cdcs,
+                    'today' => $today
                 ]);
             } else {
                 return abort(404);
@@ -258,6 +262,7 @@ class TicketController extends Controller
                     'contracts' => $contracts,
                     'activeUser' => $activeUser,
                     'users' => $users,
+                    'today' => $today
                     //'cdcs' => $cdcs,
                 ]);
             } else if (count($_GET) == 0 && Auth::user()['role'] == 'user') {
@@ -273,6 +278,7 @@ class TicketController extends Controller
                     'contracts' => $contracts,
                     'activeUser' => $activeUser,
                     'users' => $users,
+                    'today' => $today
                     //'cdcs' => $cdcs,
                 ]);
 
@@ -292,10 +298,13 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        echo '<pre>';
+        var_dump($request->input());
+        echo '</pre>';
         $request->validate([
             'start_date' => 'required|date|before_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'workTime' => 'required|numeric',
+            'workTime' => 'nullable|numeric',
             'comments' => 'required',
             'performedBy' => 'required',
             'contract_id' => 'required',
@@ -307,6 +316,10 @@ class TicketController extends Controller
         $data = $request->all();
         // trovo la data odierna, mi servirà in alcuni controlli
         $today = date('Y-m-d');
+
+        if ($data['workTime'] == null) {
+            $data['workTime'] = 0;
+        }
 
         if ($data['extraTime'] == null) {
             $data['extraTime'] = 0;

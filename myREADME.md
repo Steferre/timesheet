@@ -48,8 +48,6 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - nel file excel l'amministratore azienda gruppo azienda cliente contratto di riferimento e ticket legati al contratto
 - se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi
 - paginazione in tutte le view
-##  DA FARE
-- 
 ## IPOTESI
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
@@ -111,4 +109,8 @@ nella funzione store del ticketController, la validazione della data dei ticket
 - controllare che la funzione di delete del ticket funzioni (forse va gestita la situazione dei centri costo correlati, va eliminata la relazione prima di poter cancellare il ticket)
 - gli user si registreranno con l email aziendale? (se si dovrebbe andare bene così) : (in caso contrario va cambiata la logica per gli user)
 
-impostare di default che le date del ticket sono fissate ad oggi
+impostare di default che le date del ticket sono fissate ad oggi(FATTO)
+##  DA FARE
+- quando si è loggati come admin, impostare che, se il campo workTime viene inviato vuoto, viene messo 0 come default (FATTO)
+- controllare il riempimento del campo contratto e cliente quando si viene riportati alla pagina di creazione del ticket a seguito di un errore (FATTO)
+- scrivere funzione di eliminazione dei centri di costo
