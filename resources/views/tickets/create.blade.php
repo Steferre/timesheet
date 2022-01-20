@@ -221,7 +221,11 @@
                 <select name="performedBy" class="form-control custom-select">
                     <option value="">Scegli chi ha eseguito l'intervento</option>
                     @foreach($users as $user)
-                        <option <?php if ($user->name == old('performedBy')) echo "selected";?> value="{{ $user->name }}">{{ $user->name }}</option>
+                        @if(old('performedBy') !== null)
+                            <option selected value="{{ $user->name }}">{{ $user->name }}</option>
+                        @else
+                            <option value="{{ $user->name }}">{{ $user->name }}</option>
+                        @endif
                     @endforeach
                 </select>
             </div>
@@ -277,7 +281,7 @@
         </div>
        
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mt-2">INVIA</button>
+            <button type="submit" class="btn btn-primary mt-2">CREA</button>
         </div>
     </form>    
 @stop

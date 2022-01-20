@@ -16,7 +16,7 @@ $getParams = $_GET;
             }
         }
     </script>
-@stop    
+@stop 
 
 @section('headers')
     <h1>Ticket</h1>
@@ -70,9 +70,11 @@ $getParams = $_GET;
                     <select name="searchedC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($clients as $client)
-                            @if($client->id == old('searchedC'))
-                                <option value="{{ old('searchedC') }}" selected>{{ $client->businessName }}</option>
-                            @else
+                            @if(isset($searchedC))
+                                @if($client->id == $searchedC)
+                                    <option value="{{ $searchedC }}" selected>{{ $client->businessName }}</option>
+                                @endif
+                            @else    
                                 <option value="{{ $client->id }}">{{ $client->businessName }}</option>
                             @endif
                         @endforeach
@@ -83,8 +85,10 @@ $getParams = $_GET;
                     <select name="searchedCDC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($cdcs as $cdc)
-                            @if($cdc->id == old('searchedCDC'))
-                                <option value="{{ old('searchedCDC') }}" selected>{{ $cdc->businessName }}</option>
+                            @if(isset($searchedCDC))
+                                @if($cdc->id == $searchedCDC)
+                                    <option value="{{ $searchedCDC }}" selected>{{ $cdc->businessName }}</option>
+                                @endif    
                             @else
                                 <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
                             @endif

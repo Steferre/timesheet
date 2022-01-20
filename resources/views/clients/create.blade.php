@@ -34,13 +34,13 @@
                 </div>
                 <div class="form-group col-4">
                     <label for="phone">Telefono</label>
-                    <input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
+                    <input type="text" name="phone" value="{{ old('phone') }}"  placeholder="opzionale" class="form-control">
                 </div> 
             </div>
             <div class="form-row">
                 <div class="form-group col-4">
                     <label for="pIva">Partita IVA</label>
-                    <input type="text" name="pIva" value="{{ old('pIva') }}" class="form-control">
+                    <input type="text" name="pIva" value="{{ old('pIva') }}" placeholder="opzionale" class="form-control">
                 </div>
                 <div class="form-group col-4">
                     <label for="address">Indirizzo</label>
@@ -83,7 +83,7 @@
                 @endforeach
             @endif    
             <div class="form-group">
-                <button type="submit" class="btn btn-primary mt-2">INVIA</button>
+                <button type="submit" class="btn btn-primary mt-2">CREA</button>
             </div>
         </form>
     </div>    

@@ -153,7 +153,7 @@
         <!--tramite il campo hidden passo anche la società del gruppo (sempre KEYOS)-->
         <input type="hidden" name="company_id" value=6 readonly class="form-control">
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mt-2">INVIA</button>
+            <button type="submit" class="btn btn-primary mt-2">CREA</button>
         </div>
     </form>
 @stop

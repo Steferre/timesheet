@@ -69,7 +69,7 @@ class ClientController extends Controller
         $request->validate([
             'businessName' => 'required',
             'email' => 'required|unique:clients,email',
-            'pIva' => 'required|max:11',
+            'pIva' => 'nullable|max:11',
             'address' => 'nullable',
             'buldingNum' => 'nullable',
             'city' => 'nullable',
@@ -185,7 +185,7 @@ class ClientController extends Controller
         $request->validate([
             'businessName' => 'required',
             'email' => 'required',
-            'pIva' => 'required',
+            'pIva' => 'nullable',
             'address' => 'nullable',
             'buldingNum' => 'nullable',
             'city' => 'nullable',

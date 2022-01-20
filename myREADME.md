@@ -1,4 +1,4 @@
-## Aggiornato in data 13/01/2022
+## Aggiornato in data 20/01/2022
 
 ## contracts views
 index  ok
@@ -49,11 +49,11 @@ per nome contratto, per range di data, per azienda cliente lato admin e lato use
 - se un'azienda compra più di un pacchetto e i contratti che apre sono più di uno, bisgona fare in modo che gli user possano alimentare solo i contratti che sono attivi
 - paginazione in tutte le view
 ##  DA FARE
-- per la paginazione verificare, che quando si torna indietro, si torni alla pagina dalla quale si è andati al dettaglio
+- 
 ## IPOTESI
 - se un contratto non presenta ticket, quando vado a fare l'export non viene considerato,
 (introdurre la regola che se un contratto non presenta ticket è in stato 'non attivo'?)
-## DA AGGIUNGERE
+## DA AGGIUNGERE (FATTO)
 1 opzione doppia tipologia di accumulo delle ore, a salire da 0 e ascendere dal totale
 2 nella scelta dei centri di costo devo poter scegliere solo i centri di costo di alcune aziende
 
@@ -103,3 +103,12 @@ descrizione dell’intervento. Metterei il campo sulla riga successiva e aumente
 elenco ticket:
 per ottimizzare lo spazio toglierei la colonna “aperto” e aumenterei lo spazio a disposzione del commento, per avere già in questo elenco un colpo d’occhio rispetto all’intervento.
 Ho eseguito una ricerca per azienda cliente selezionando dalle opzioni (screen_3), selezionando un’azienda che non ha ticket.  Lo screen con i risultati non mostra la selezione che ho fatto nelle options, mostra il messaggio , mostra il messaggio che non ci sono risultati (corretto) ma la table contiene lo stesso il ticket di lyve (che non dovrebbe mostrare). (RISOLTO)
+
+## DUBBI
+nella funzione store del ticketController, la validazione della data dei ticket
+- in apertura deve essere antecedente o al massimo uguale alla data odierna
+- in chiusura deve essere ??? (attualmente è possibile inserire una data uguale o successiva a quella di apertura) : (ma forse sarebbe meglio mettere un range più ristretto...tipo strettamente uguale ad oggi) => (quando si crea il ticket la data di chiusura non va selezionata, è impostata di default tramite un campo hidden a today)
+- controllare che la funzione di delete del ticket funzioni (forse va gestita la situazione dei centri costo correlati, va eliminata la relazione prima di poter cancellare il ticket)
+- gli user si registreranno con l email aziendale? (se si dovrebbe andare bene così) : (in caso contrario va cambiata la logica per gli user)
+
+impostare di default che le date del ticket sono fissate ad oggi

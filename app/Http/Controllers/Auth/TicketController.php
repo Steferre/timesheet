@@ -36,11 +36,6 @@ class TicketController extends Controller
             'searchedCDC',
         ]);
 
-        /* echo '<pre>';
-        var_dump($dff);
-        echo '</pre>'; */
-        
-
         if ($loggedUser['role'] == 'admin'){
 
             $clients = Client::all();
@@ -65,19 +60,7 @@ class TicketController extends Controller
                 $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
-                /* echo '<pre>';
-                var_dump($contractN);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($startingDR);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($searchedC);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($searchedCDC);
-                echo '</pre>';
-                die(); */
+                
                 $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id');
 
                 if ($startingDR) {
@@ -168,19 +151,7 @@ class TicketController extends Controller
                 $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
-               /*  echo '<pre>';
-                var_dump($contractN);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($startingDR);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($searchedC);
-                echo '</pre>';
-                echo '<pre>';
-                var_dump($searchedCDC);
-                echo '</pre>';
-                die(); */
+               
                 if ($startingDR) {
                     $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
                 }
@@ -239,38 +210,19 @@ class TicketController extends Controller
         $emailPathArray = explode('.', $emailArray[1]);
         $activeUserCompanyName = $emailPathArray[0];
 
-        // recupero i centri di costo da passare alla view
-        // devo farlo in due modi diversi
-        // se creo un ticket sapendo già il contratto posso usare una via
-        // nel caso in cui il contratto lo scelgo durante la creazione
-        // devo usare js per dispensare solo i cdc legati al cliente scelto in base al contratto
-        //$cdcs = Cdc::all();
-
-
-        // se sono admin vedo tutti gli utenti
-        if ($activeUser['role'] == 'admin') {
-
-            $users = User::all();
-
-            // se sono user vedo solo gli utenti dell'azienda del mio gruppo
-        } else {
-            
-            $users = User::where('email', 'like', '%'. $emailArray[1] .'%')->get();
-
-        }
-
+        // recupero gli utenti da passare alla view
+        $users = User::all();
+        
+        // posso arrivare alla pagina di creazione di un ticket in due modi
+        // direttamente dal contratto verificando se sia presente lo slug (codice univoco)
         if (isset($data['slug'])) {
-
+            // arrivo direttamente (il contratto è già selezionato)
             $contract = Contract::where('slug', $data['slug'])->first();
 
             //trovo anche il cliente per risalire ai cdc correlati
             $client = $contract->client;
             $cdcs = $client->cdcs()->where('clientID', $client['id'])->get();
-            /* echo '<pre>';
-            print_r($cdcs);
-            echo '</pre>';
-            die(); */
-
+            
             // prima di dispensare la view che permette la creazione del ticket
             // verificare che il contratto sia attivo
             if ($contract['active'] == 'N') {
@@ -279,28 +231,10 @@ class TicketController extends Controller
 
             }
 
+            // potrebbe non servire più
             $companyName = strtolower(explode(' ', $contract->tycoonGroupCompany->businessName)[0]);
 
-            $users = User::where('email', 'like', '%'. $companyName .'%')->get();
-
-            // recupero i centri di costo da passare alla view
-            //$cdcs = $contract->client->cdcs()->groupBy('cdcID')->get();
-            /* $client = Client::find($contract->client->id);
-            $cdcs = $client->cdcs()->get();
-            echo '<pre>';
-            echo 'numero di righe trovate: ' . count($cdcs);
-            echo '</pre>';
-            echo '<pre>';
-            //print_r($cdcs);
-            echo '</pre>';
-            foreach ($cdcs as $cdc) {
-                echo '<pre>';
-                print_r($cdc->businessName);
-                echo '<pre>';
-            }
-            
-            die(); */
-
+            // se esiste il contratto
             if(isset($contract)) {
                 return view('tickets.create', [
                     'data' => $data,
@@ -314,8 +248,8 @@ class TicketController extends Controller
             }
             
 
-        } else {
-            
+        } else { // caso in cui arrivo alla creazione del ticket dal pulsante apposito
+            // in questo caso devo scegliere io su che contratto aprire il ticket
             if (count($_GET) == 0 && Auth::user()['role'] == 'admin') {
                 // passo la lista di tutti i contratti attivi
                 $contracts = Contract::where('active', 'Y')->get();
@@ -335,10 +269,6 @@ class TicketController extends Controller
                                         ->where('contracts.active', 'Y')
                                         ->get();
 
-                /* echo '<pre>';
-                echo 'numero di contratti attivi: ' . count($contracts);
-                echo '<pre>';
-                die(); */
                 return view('tickets.create', [
                     'contracts' => $contracts,
                     'activeUser' => $activeUser,
@@ -375,10 +305,6 @@ class TicketController extends Controller
         ]);
 
         $data = $request->all();
-        /* echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        die(); */
         // trovo la data odierna, mi servirà in alcuni controlli
         $today = date('Y-m-d');
 
@@ -428,22 +354,6 @@ class TicketController extends Controller
             }
         }
         
-        /* echo '<pre>';
-        echo 'data chiusura contratto: ';
-        var_dump($contract['end_date']);
-        echo '</pre>';
-        echo '<pre>';
-        echo 'data chiusura ticket: ';
-        print_r($data['end_date']);
-        echo '</pre>';
-        echo '<pre>';
-        echo 'data chiusura ticket è successiva alla data chiusura contratto?: ';
-        var_dump(($data['end_date'] > null));
-        echo '</pre>';
-        echo '<pre>';
-        print_r($request->input());
-        echo '</pre>';
-        die(); */
         // preparo il ticket, lo salvo solo se il controllo delle ore residue risulta positivo
         $ticket = new Ticket();
 
@@ -502,7 +412,7 @@ class TicketController extends Controller
         
                 } */
 
-                return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di Ore rimaste disponibili < 10%");
+                return redirect('tickets')->with("warning", "ATTENZIONE!!! " . " " . $contract->name . " " . "Percentuale di ore rimaste disponibili < 10%");
 
             } else if ($result == 0) {
                 // il contratto ha esaurito le ore disponibili
@@ -515,7 +425,7 @@ class TicketController extends Controller
                 $contract->active = 'N';
                 $contract->save();
 
-                // devo sempre salvare la relazione enlla tabella pivot
+                // devo sempre salvare la relazione nella tabella pivot
                 /* if ($data['cdc_id'] == null) {
 
                     $client->cdcs()->attach($newCDC['id']);
@@ -528,7 +438,7 @@ class TicketController extends Controller
 
                 return redirect('tickets')->with("warning", "ATTENZIONE!!! " . "Le ore disponibili per il contratto: " . $contract->name . " " . "sono terminate! Il contratto è quindi stato chiuso");
 
-            } else {
+            } else { // non ci sono particolari messaggi da mostrare, il ticket viene creato regolarmente
 
                 $ticket->save();
 
@@ -581,9 +491,6 @@ class TicketController extends Controller
                 return redirect()->route('tickets.index');
 
             }
-            
-            // recupero l'azienda cliente
-            // $clientCompany = $contract->client;
         }    
     }
 
@@ -667,7 +574,7 @@ class TicketController extends Controller
         // oppure che sia precedente, in caso contrario blocco tutto
         if ($contract['end_date'] !== null) {
             if (($data['end_date'] > $contract['end_date'])) {
-                echo 'ERRORE, data di chiusura del ticket successiva alla data di chiusura del contratto!!!';
+                return back()->with('error', 'ERRORE, data di chiusura del ticket successiva alla data di chiusura del contratto!!!')->withInput($request->input());
             }
         }
         
@@ -680,19 +587,7 @@ class TicketController extends Controller
         // quindi devo trovare la differenza tra le ore già presenti nel ticket e quelle dell'aggiornamento
         // e valutare se sono congrue con quanto detto sopra
         // ho bisogno anche di sapere quante ore mancano alla fine del contratto
-        /* echo '<pre>';
-        echo 'ore salvate nel ticket che sto modificando: ' . $savedTicketHours;
-        echo '</pre>';
-        echo '<pre>';
-        echo 'ore totali associate al contratto: ' . $contract->hours;
-        echo '</pre>';
-        echo '<pre>';
-        echo 'nuove ore inserite: ' . $modifiedTicketHours;
-        echo '</pre>';
-        echo '<pre>';
-        echo 'differenza tra ore originali e ore modificate: ' . $diffHours;
-        echo '</pre>'; */
-        
+    
         //PROBABILE PUNTO DI SEPARAZIONE TRA TIPO DI CONTRATTO
         if ($contract['type'] == 'decrease') {
             $remainingHours = $contract->totHours - $contract->hours;

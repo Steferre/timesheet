@@ -36,39 +36,39 @@
                 </div>
                 <div class="form-group col-4">
                     <label for="pIva">Partita IVA</label>
-                    <input type="text" name="pIva" value="{{ $client->pIva }}" class="form-control">
+                    <input type="text" name="pIva" value="{{ $client->pIva }}" class="form-control" placeholder="opzionale">
                 </div> 
             </div>
             <div class="form-row">
                 <div class="form-group col-4">
                     <label for="address">Indirizzo</label>
-                    <input type="text" name="address" value="{{ $client->address }}" class="form-control">
+                    <input type="text" name="address" value="{{ $client->address }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-4">
                     <label for="buldingNum">Numero Civico</label>
-                    <input type="text" name="buldingNum" value="{{ $client->buldingNum }}" class="form-control">
+                    <input type="text" name="buldingNum" value="{{ $client->buldingNum }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-4">
                     <label for="city">Città</label>
-                    <input type="text" name="city" value="{{ $client->city }}" class="form-control">
+                    <input type="text" name="city" value="{{ $client->city }}" class="form-control" placeholder="opzionale">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-3">
                     <label for="province">Provincia</label>
-                    <input type="text" name="province" value="{{ $client->province }}" class="form-control">
+                    <input type="text" name="province" value="{{ $client->province }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-3">
                     <label for="country">Stato</label>
-                    <input type="text" name="country" value="{{ $client->country }}" class="form-control">
+                    <input type="text" name="country" value="{{ $client->country }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-3">
                     <label for="postalCode">Codice Postale</label>
-                    <input type="text" name="postalCode" value="{{ $client->postalCode }}" class="form-control">
+                    <input type="text" name="postalCode" value="{{ $client->postalCode }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-3">
                     <label for="phone">Telefono</label>
-                    <input type="text" name="phone" value="{{ $client->phone }}" class="form-control">
+                    <input type="text" name="phone" value="{{ $client->phone }}" class="form-control" placeholder="opzionale">
                 </div>
             </div>
             <div class="form-row">
