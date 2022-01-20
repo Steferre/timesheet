@@ -119,13 +119,27 @@ class CdcController extends Controller
     public function destroy($id)
     {
         $cdc = Cdc::findOrFail($id);
-        $clients = $cdc->clients()->where('cdcID', $id)->get();
-        echo '<pre>';
-        var_dump($clients);
-        echo '</pre>';
+        $clients = $cdc->clients()->where('cdcID', $id)->get(); // ritorna un array
+        /* echo '<pre>';
+        var_dump(count($clients));
+        echo '</pre>'; */
+        // se il centro di costo non è legato a nessun cliente si può eliminare direttamente
+        // $clients sarà un array vuoto
+        if(count($clients) == 0) {
+            $cdc->delete();
+
+            return back()->with('success', "Il centro di costo " . $cdc->businessName . " è stato eliminato con successo!");
+
+        } else {
+            // $clients avrà tanti elementi quante aziende clienti è legato il cdc
+            // in questo caso per poterlo eliminare bisognerebbe eliminare tutte le relazioni
+            // con le aziende clienti
+            return back()->with('warning', "ATTENZIONE!!! Il centro di costo è legato a n°: " . count($clients) . " azienda/e cliente/i, quindi non può essere eliminato.");
+        }
 
 
-        die('funzione ancora da scrivere');
+
+        //die('funzione ancora da scrivere');
 
     }
 }

@@ -75,7 +75,7 @@
                                 </button>
                             </form>
                         </td>
-                        @else
+                    @else
                         <td title="elimina contratto">
                             <form method="POST" action="{{ route('cdcs.destroy', $cdc->id) }}">
                                 @csrf
