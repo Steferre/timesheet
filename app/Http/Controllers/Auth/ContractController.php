@@ -372,7 +372,7 @@ class ContractController extends Controller
             'uniCode' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'description' => 'required',
+            'description' => 'nullable',
             'totHours' => 'nullable|numeric',
             'active' => 'required',
             'type' => 'required',
