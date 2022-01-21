@@ -60,6 +60,9 @@
                 <th>pIva</th>
                 <th>Telefono</th>
                 <th>Contratti attivi</th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

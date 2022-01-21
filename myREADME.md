@@ -113,4 +113,4 @@ impostare di default che le date del ticket sono fissate ad oggi(FATTO)
 ##  DA FARE
 - quando si è loggati come admin, impostare che, se il campo workTime viene inviato vuoto, viene messo 0 come default (FATTO)
 - controllare il riempimento del campo contratto e cliente quando si viene riportati alla pagina di creazione del ticket a seguito di un errore (FATTO)
-- scrivere funzione di eliminazione dei centri di costo
+- scrivere funzione di eliminazione dei centri di costo(FATTO)

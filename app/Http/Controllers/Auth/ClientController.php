@@ -53,9 +53,18 @@ class ClientController extends Controller
      */
     public function create()
     {
-        $cdcs = Cdc::all();
+        // posso dispensare solo i cdc che non sono aziende clienti
+        $onlyCdcs = Cdc::leftJoin('clients', 'cdcs.businessName', '=', 'clients.businessName')
+                    ->select('cdcs.id', 'cdcs.businessName')
+                    ->where('clients.businessName', null)
+                    ->get();
 
-        return view('clients.create', ['cdcs' => $cdcs]);
+        /* echo '<pre>';
+        print_r($onlyCdcs);
+        echo '</pre>';
+        die();    */         
+
+        return view('clients.create', ['cdcs' => $onlyCdcs]);
     }
 
     /**
@@ -168,9 +177,12 @@ class ClientController extends Controller
         // per permettere l'aggiunta di cdcs nuovi
         $cdcs = $client->cdcs()->where('clientID', $id)->get();
 
-        $allCdcs = Cdc::all();
+        $onlyCdcs = Cdc::leftJoin('clients', 'cdcs.businessName', '=', 'clients.businessName')
+                    ->select('cdcs.id', 'cdcs.businessName')
+                    ->where('clients.businessName', null)
+                    ->get();
 
-        return view('clients.edit', ['client' => $client, 'cdcs' => $cdcs, 'allCdcs' => $allCdcs]);
+        return view('clients.edit', ['client' => $client, 'cdcs' => $cdcs, 'onlyCdcs' => $onlyCdcs]);
     }
 
     /**

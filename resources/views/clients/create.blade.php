@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('headers')
-    <h1>Area inserimento di una nuova azienda cliente</h1>
+    <h1 class="mb-3">Area inserimento di una nuova azienda cliente</h1>
     <div title="lista clienti">
         <a href="{{ route('clients.index') }}" class="btn btn-primary" role="button">
             <i class="bi bi-box-arrow-left"></i>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group col-4">
                     <label for="email">Email</label>
-                    <input type="text" name="email" value="{{ old('email') }}" class="form-control">
+                    <input type="text" name="email" value="{{ old('email') }}" placeholder="opzionale" class="form-control">
                 </div>
                 <div class="form-group col-4">
                     <label for="phone">Telefono</label>
@@ -82,7 +82,7 @@
                 </div>
                 @endforeach
             @endif    
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <button type="submit" class="btn btn-primary mt-2">CREA</button>
             </div>
         </form>

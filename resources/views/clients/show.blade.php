@@ -75,14 +75,16 @@
         <div class="col-4 text-center">Paese: <strong>{{ $client->country }}</strong></div>
         <div class="col-4 text-center">Codice postale: <strong>{{ $client->postalCode }}</strong></div>
     </div>
+    @if(count($cdcs) > 0)
     <div class="row mt-3 mb-5">
         <div class="mr-3">Centri di costo dell'azienda cliente:</div>
-            <ul class="list-inline">
-                @foreach($cdcs as $cdc)
+        <ul class="list-inline">
+            @foreach($cdcs as $cdc)
                 <li class="list-inline-item btn-success px-2">{{ $cdc->businessName }}</li>
-                @endforeach
-            </ul>
+            @endforeach
+        </ul>
     </div>
+    @endif
     
     @if(count($client->contracts) > 0)
     <button onclick="showHideBox()" id="openBtn" style="display: none;" class="btn btn-info">Mostra Contratti</button>

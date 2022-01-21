@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('headers')
-    <h1>Area modifica azienda cliente</h1>
+    <h1 class="mb-3">Area modifica azienda cliente</h1>
     <div title="lista clienti">
         <a href="{{ route('clients.index') }}" class="btn btn-primary" role="button">
             <i class="bi bi-box-arrow-left"></i>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group col-4">
                     <label for="email">Email</label>
-                    <input type="text" name="email" value="{{ $client->email }}" class="form-control">
+                    <input type="text" name="email" value="{{ $client->email }}" class="form-control" placeholder="opzionale">
                 </div>
                 <div class="form-group col-4">
                     <label for="pIva">Partita IVA</label>
@@ -78,7 +78,7 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-12">
-                    @foreach($allCdcs as $singleCdc)
+                    @foreach($onlyCdcs as $singleCdc)
                         <div class="custom-control custom-checkbox custom-control-inline">
                             <input <?php foreach($cdcs as $cdc) if ($singleCdc->id == $cdc->id) echo "checked";?> type="checkbox" class="custom-control-input" value="{{ $singleCdc->id }}" name="cdc_id[]" id="{{ $singleCdc->id }}">
                             <label class="custom-control-label" for="{{ $singleCdc->id }}">{{ $singleCdc->businessName }}</label>
