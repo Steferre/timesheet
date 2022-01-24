@@ -108,7 +108,7 @@
         <thead class="thead-dark">
             <tr>
                 <th>Nome</th>
-                <th>Codice</th>
+                <!-- <th>Codice</th> -->
                 <th>Data Inizio</th>
                 <th>Tipologia contratto</th>
                 <th>Ore Totali</th>
@@ -127,7 +127,7 @@
             @foreach($contracts as $contract)
                 <tr>
                     <td>{{ $contract->name }}</td>
-                    <td>{{ $contract->uniCode }}</td>
+                    <!-- <td>{{ $contract->uniCode }}</td> -->
                     <td>{{ $contract->start_date }}</td>
                     <td><?php if($contract->type == 'increase') {echo 'accumulo';} else {echo 'decremento';} ?></td>
                     @if ($contract->totHours != null)
