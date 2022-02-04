@@ -112,10 +112,10 @@
                 <th>Data Inizio</th>
                 <th>Tipologia contratto</th>
                 <th>Ore Totali</th>
-                <th>Ore utilizzate (user+admin)</th>
+                <th>Ore utilizzate (fatturabili)</th>
                 <th>Avanzamento (%)</th>
                 <th>Ticket</th>
-                <th>Attivo</th>
+                <th>Stato</th>
                 <th>Azienda Cliente</th>
                 <th></th>
                 <th></th>
@@ -132,7 +132,7 @@
                     <td><?php if($contract->type == 'increase') {echo 'accumulo';} else {echo 'decremento';} ?></td>
                     @if ($contract->totHours != null)
                     <td>{{ $contract->totHours }}</td>
-                    <td>{{ $contract->hours }}</td>
+                    <td class="text-center">{{ $contract->hours }}</td>
                     @php
                     $advancement = ((intval($contract->hours)/intval($contract->totHours))*100);
                     $result = round($advancement);
@@ -152,11 +152,15 @@
                     </td>
                     @else
                     <td>Nessun limite</td>
-                    <td>{{ $contract->hours }}</td>
+                    <td class="text-center">{{ $contract->hours }}</td>
                     <td>---</td>
                     @endif
                     <td>{{ count($contract->tickets) }}</td>
-                    <td>{{ $contract->active }}</td>
+                    @if($contract->active === 'Y')
+                    <td>Attivo</td>
+                    @elseif($contract->active === 'N')
+                    <td>Chiuso</td>
+                    @endif
                     <td>{{ $contract->client->businessName }}</td>
                     @if($loggedUser['role'] == 'admin')
                         <td title="Modifica contratto">

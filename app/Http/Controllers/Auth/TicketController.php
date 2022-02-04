@@ -54,10 +54,10 @@ class TicketController extends Controller
 
             } else if (count($dff) > 0) {
 
-                echo '<pre>';
+                /* echo '<pre>';
                 var_dump($dff);
                 echo '</pre>';
-                die();
+                die(); */
 
                 // filtri attivati endingDR
                 $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
@@ -81,7 +81,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.client_id', $searchedC);
                 }
                 if ($searchedCDC) {
-                    $tickets = $tickets->where('contracts.client_id', $searchedCDC);
+                    $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
                 }
 
                 $tickets = $tickets->select('tickets.*')->paginate(10);

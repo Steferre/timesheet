@@ -49,12 +49,30 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        /* echo '<pre>';
+        print_r($data);
+        echo '</pre>'; */
+        $emailDomain = explode('@', $data['email'])[1];
+
+        if($emailDomain !== 'keyos.it') {
+            $data['email'] = 'not valid email';
+        }
+
+        if($data['role'] !== 'user') {
+            $data['role'] = 'user';
+        }
+        /* echo '<pre>';
+        print_r($data['email']);
+        echo '</pre>';
+        die(); */
+    
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string'],
         ]);
+        
     }
 
     /**
@@ -65,12 +83,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        /* echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        die(); */
-
-
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

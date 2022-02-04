@@ -75,13 +75,29 @@
     </div>
     <div class="row mt-3">
         <div class="col-4 text-center">Data apertura: <strong>{{ date('d-m-Y', strtotime($contract->start_date)) }}</strong></div>
+        @if($contract->end_date)
         <div class="col-4 text-center">Data chiusura: <strong>{{ date('d-m-Y', strtotime($contract->end_date)) }}</strong></div>
+        @else
+        <div class="col-4 text-center">Data chiusura: <strong>Fine ore pacchetto</strong></div>
+        @endif
         <div class="col-4 text-center">Azienda cliente: <strong>{{ $contract->client->businessName }}</strong></div>
     </div>
     <div class="row mt-3">
-        <div class="col-4 text-center">Stato: <strong>{{ $contract->active }}</strong></div>
-        <div class="col-4 text-center">Tipologia contratto: <strong>{{ $contract->type }}</strong></div>
+        @if($contract->active === 'Y')
+        <div class="col-4 text-center">Stato: <strong>Attivo</strong></div>
+        @elseif($contract->active === 'N')
+        <div class="col-4 text-center">Stato: <strong>Chiuso</strong></div>
+        @endif
+        @if($contract->type === 'increase')
+        <div class="col-4 text-center">Tipologia contratto: <strong>Accumulo ore</strong></div>
+        @elseif($contract->type === 'decrease')
+        <div class="col-4 text-center">Tipologia contratto: <strong>Decremento ore</strong></div>
+        @endif
+        @if($contract->totHours)
         <div class="col-4 text-center">Ore pacchetto: <strong>{{ $contract->totHours }}</strong></div>
+        @else
+        <div class="col-4 text-center">Ore pacchetto: <strong>Non definite</strong></div>
+        @endif
     </div>
 
     <p class="text-center mt-3">Descrizione: <strong>{{ $contract->description }}</strong></p>
@@ -97,8 +113,8 @@
                         <th>Id</th>
                         <th>Data Inizio</th>
                         <th>Data Fine</th>
-                        <th>Tempo intervento</th>
-                        <th>Ore extra admin</th>
+                        <th>Tempo int.</th>
+                        <th>Ore extra</th>
                         <th>Commenti</th>
                         <th>Owner</th>
                         <th>Centro di costo</th>
@@ -112,7 +128,7 @@
                             <td>{{ $ticket->end_date }}</td>
                             <td>{{ $ticket->workTime }}</td>
                             <td>{{ $ticket->extraTime }}</td>
-                            <td>{{ $ticket->comments }}</td>
+                            <td style="width: 30%;">{{ $ticket->comments }}</td>
                             <td>{{ $ticket->performedBy }}</td>
                             <td>{{ $ticket->cdc->businessName }}</td>
                         </tr>
