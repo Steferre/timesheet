@@ -152,16 +152,17 @@ class ContractController extends Controller
             // devo trovare le azienda clienti $clients per l'azienda del gruppo di cui faccio parte
             $clients = Client::join('contracts', 'contracts.client_id', '=', 'clients.id')
                             ->join('tycoon_group_companies', 'contracts.company_id', '=', 'tycoon_group_companies.id')
-                            ->select('clients.*')
+                            ->select('clients.id', 'clients.businessName')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%')
-                            ->groupBy('clients.id')
+                            ->groupBy('clients.id', 'clients.businessName')
                             ->get();
             
             // parto a preparare la query per trovare i contratti che posso mostrare
             $contracts = Contract::join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                                     ->select('contracts.*')
                                     ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
-                
+            
+            
             if (count($dff) == 0) {
                 // filtro non attivo 
                 // passo i contratti recuperati
@@ -169,7 +170,7 @@ class ContractController extends Controller
                 $contracts = $contracts->paginate(10);
 
                 $numContratti = count($contracts);
-            
+                
                 for ($i=0; $i < $numContratti; $i++) { 
                     $contract = $contracts[$i];
 

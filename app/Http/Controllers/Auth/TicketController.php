@@ -54,6 +54,11 @@ class TicketController extends Controller
 
             } else if (count($dff) > 0) {
 
+                echo '<pre>';
+                var_dump($dff);
+                echo '</pre>';
+                die();
+
                 // filtri attivati endingDR
                 $contractN = isset($dff['contractN']) ? $dff['contractN'] : null;
                 $startingDR = isset($dff['startingDR']) ? $dff['startingDR'] : null;
@@ -112,18 +117,17 @@ class TicketController extends Controller
             // preparo la query per ottenere la lista delle aziende clienti della società del gruppo
             $clients = Client::join('contracts', 'contracts.client_id', '=', 'clients.id')
                             ->join('tycoon_group_companies', 'contracts.company_id', '=', 'tycoon_group_companies.id')
-                            ->select('clients.*')
+                            ->select('clients.id', 'clients.businessName')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%')
-                            ->groupBy('clients.id')
                             ->get();
 
             // preparo la query per ottenere la lista dei centri di costo legati a contratti della società del gruppo
             $cdcs = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                             ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
-                            ->select('cdcs.*')
+                            ->select('cdcs.id', 'cdcs.businessName')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%')
-                            ->groupBy('cdcs.id')
+                            ->groupBy('cdcs.id', 'cdcs.businessName')
                             ->get();
 
             // preparo la query di base per ottenere i ticket
