@@ -20,9 +20,10 @@ class ContractsExport implements FromCollection, WithHeadings
             'ore totali pacchetto',
             'ore utilizzate',
             'valore % ore utilizzate',
-            'Società del gruppo',
+            'stato contratto',
+            'tipo contratto',
             'Azienda Cliente',
-            'descrizione',
+            'descrizione'
         ];
     }
 

@@ -431,13 +431,15 @@ class ContractController extends Controller
                                     ->join('tycoon_group_companies', 'contracts.company_id', '=', 'tycoon_group_companies.id')
                                     ->join('tickets', 'contracts.id', '=', 'tickets.contract_id')
                                     ->select('contracts.name', 'contracts.uniCode',
+                                    'contracts.start_date','contracts.end_date', 'contracts.totHours',
+                                    DB::raw("SUM(tickets.workTime + tickets.extraTime) as hours"),
+                                    DB::raw("ROUND((SUM(tickets.workTime + tickets.extraTime)/contracts.totHours)*100) as perc_ore_utiizzate"),
+                                    'contracts.active', 'contracts.type',
+                                    'clients.businessName as Azienda Cliente', 'contracts.description')
+                                    ->groupBy('contracts.id', 'contracts.name', 'contracts.uniCode',
                                     'contracts.start_date','contracts.end_date',
                                     'contracts.active', 'contracts.type',
-                                    'contracts.totHours', DB::raw("SUM(tickets.workTime + tickets.extraTime) as hours"),
-                                    DB::raw("ROUND((SUM(tickets.workTime + tickets.extraTime)/contracts.totHours)*100) as perc_ore_utiizzate"),
-                                    'tycoon_group_companies.businessName as Società del gruppo',
-                                    'clients.businessName as Azienda Cliente', 'contracts.description')
-                                    ->groupBy('contracts.id');
+                                    'contracts.totHours', 'clients.businessName');                   
 
         if (Auth::user()['role'] == 'admin') {
 
@@ -478,11 +480,11 @@ class ContractController extends Controller
         }
 
         $contracts = $contracts->get();
-        /* echo '<pre>';
+        echo '<pre>';
         print_r($contracts);
         echo '</pre>';
 
-        die(); */
+        die();
 
         return Excel::download(new ContractsExport($contracts), 'contracts.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
