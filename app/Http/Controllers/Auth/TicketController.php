@@ -34,6 +34,7 @@ class TicketController extends Controller
             'endingDR',
             'searchedC',
             'searchedCDC',
+            'contractStatus'
         ]);
 
         if ($loggedUser['role'] == 'admin'){
@@ -43,8 +44,14 @@ class TicketController extends Controller
 
             if (count($dff) == 0) {
                 // filtri non settati
-                $tickets = Ticket::paginate(10);
-                
+                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')->paginate(10);
+
+                /* foreach ($tickets as $ticket) {
+                    echo '<pre>';
+                    var_dump($ticket['active']);
+                    echo '</pre>';
+                }
+                die(); */
                 return view('tickets.index', [
                     'tickets' => $tickets,
                     'users' => $users,
@@ -65,6 +72,7 @@ class TicketController extends Controller
                 $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
+                $contractStatus = isset($dff['contractStatus']) ? $dff['contractStatus'] : null;
                 
                 $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id');
 
@@ -83,6 +91,9 @@ class TicketController extends Controller
                 if ($searchedCDC) {
                     $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
                 }
+                if ($contractStatus) {
+                    $tickets = $tickets->where('contracts.active', $contractStatus);
+                }
 
                 $tickets = $tickets->select('tickets.*')->paginate(10);
 
@@ -97,12 +108,17 @@ class TicketController extends Controller
                         'endingDR' => $endingDR,
                         'searchedC' => $searchedC,
                         'searchedCDC' => $searchedCDC,
+                        'contractStatus' => $contractStatus,
                         'cdcs' => $cdcs,
                     ]);
 
                 } else {
                     // la ricerca non ha fornito risultati, perchè uno o più campi non sono corretti
-                    // quindi nella view non dovrò mostrare risultati 
+                    // quindi nella view non dovrò mostrare risultati
+                    /* echo '<pre>';
+                    var_dump($request->input());
+                    echo '</pre>';
+                    die();  */
                     return back()->with("warning", "La ricerca NON ha prodotto risultati, provare a cambiare i paramentri inseriti!")->withInput($request->input());
                 }
 
@@ -155,6 +171,7 @@ class TicketController extends Controller
                 $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
                 $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
+                $contractStatus = isset($dff['contractStatus']) ? $dff['contractStatus'] : null;
                
                 if ($startingDR) {
                     $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
@@ -171,6 +188,9 @@ class TicketController extends Controller
                 if ($searchedCDC) {
                     $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
                 }
+                if ($contractStatus) {
+                    $tickets = $tickets->where('contracts.active', $contractStatus);
+                }
 
                 $tickets = $tickets->paginate(10);
 
@@ -185,6 +205,7 @@ class TicketController extends Controller
                         'endingDR' => $endingDR,
                         'searchedC' => $searchedC,
                         'searchedCDC' => $searchedCDC,
+                        'contractStatus' => $contractStatus,
                         'cdcs' => $cdcs,
                     ]);
 
@@ -728,6 +749,7 @@ class TicketController extends Controller
             'endingDR',
             'searchedC',
             'searchedCDC',
+            'contractStatus'
         ]);
 
         /* echo '<pre>';
@@ -741,6 +763,7 @@ class TicketController extends Controller
         $endingDR = isset($dff['endingDR']) ? $dff['endingDR'] : null;
         $searchedC = isset($dff['searchedC']) ? $dff['searchedC'] : null;
         $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
+        $contractStatus = isset($dff['contractStatus']) ? $dff['contractStatus'] : null;
 
         if (Auth::user()['role'] == 'admin') {// admin
 
@@ -748,9 +771,9 @@ class TicketController extends Controller
                             ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente',
-                                    'contracts.name', 'contracts.uniCode', 'tickets.id',
-                                    'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy');
+                            ->select('clients.businessName as Azienda Cliente',
+                                    'contracts.name', 'contracts.uniCode',
+                                    'tickets.workTime', 'tickets.extraTime', 'tickets.performedBy');
             
         } else {// user normale
             $emailPath = explode('@', Auth::user()['email']);
@@ -761,9 +784,9 @@ class TicketController extends Controller
                             ->join('cdcs', 'cdcs.id', '=', 'tickets.cdc_id')
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-                            ->select('tycoon_group_companies.businessName as Società del gruppo', 'clients.businessName as Azienda Cliente', 
-                                    'contracts.name', 'contracts.uniCode', 'tickets.id',
-                                    'tickets.workTime', 'tickets.extraTime','tickets.openBy', 'tickets.performedBy')
+                            ->select('clients.businessName as Azienda Cliente', 
+                                    'contracts.name', 'contracts.uniCode',
+                                    'tickets.workTime', 'tickets.extraTime', 'tickets.performedBy')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
             
         }
@@ -782,6 +805,9 @@ class TicketController extends Controller
         }
         if ($searchedCDC) {
             $tickets = $tickets->where('tickets.cdc_id', $searchedCDC);
+        }
+        if ($contractStatus) {
+            $tickets = $tickets->where('contracts.active', $contractStatus);
         }
 
         $tickets = $tickets->get();

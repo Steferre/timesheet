@@ -8,8 +8,9 @@ if (isset($data['getParams'])){
     $endingDR = $data['getParams']['endingDR'];
     $searchedC = $data['getParams']['searchedC'];
     $searchedCDC = $data['getParams']['searchedCDC'];
+    $contractStatus = $data['getParams']['contractStatus'];
     $page = isset($data['getParams']['page']) ? $data['getParams']['page'] : null;
-    $query= '?_token='. $token .'&contractN='.$contractN.'&startingDR='.$startingDR.'&endingDR='.$endingDR.'&searchedC='.$searchedC.'&searchedCDC='.$searchedCDC.'&page='.$page;
+    $query= '?_token='. $token .'&contractN='.$contractN.'&startingDR='.$startingDR.'&endingDR='.$endingDR.'&searchedC='.$searchedC.'&searchedCDC='.$searchedCDC.'&contractStatus='.$contractStatus.'&page='.$page;
 } else {
     $query;
 }

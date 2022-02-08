@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @php
 $getParams = $_GET;
+$existSearchedC = isset($searchedC);
+$existSearchedCDC = isset($searchedCDC);
+$existcontractStatus = isset($contractStatus);
 @endphp
 @section('scripts')
     <script>
@@ -66,33 +69,60 @@ $getParams = $_GET;
                     @endif
                 </div>
                 <div class="form-group col-2">
+                    @php
+                    $result = old('searchedC');
+                    @endphp
                     <label for="searchedC">Azienda Cliente</label>
                     <select name="searchedC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($clients as $client)
-                            @if(isset($searchedC))
-                                @if($client->id == $searchedC)
-                                    <option value="{{ $searchedC }}" selected>{{ $client->businessName }}</option>
-                                @endif
-                            @else    
+                            @if($existSearchedC)
+                                <option <?php if ($client->id == $searchedC) echo "selected";?> value="{{ $client->id }}">{{ $client->businessName }}</option>
+                            @elseif($result)
+                                <option <?php if ($client->id == $result) echo "selected";?> value="{{ $client->id }}">{{ $client->businessName }}</option>
+                            @else
                                 <option value="{{ $client->id }}">{{ $client->businessName }}</option>
                             @endif
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-2">
-                    <label for="searchedCDC">Centro di costo</label>
+                    @php
+                    $result = old('searchedCDC');
+                    @endphp
+                    <label for="searchedCDC">Centro di Costo</label>
                     <select name="searchedCDC" class="form-control">
                         <option value="">Seleziona...</option>
                         @foreach($cdcs as $cdc)
-                            @if(isset($searchedCDC))
-                                @if($cdc->id == $searchedCDC)
-                                    <option value="{{ $searchedCDC }}" selected>{{ $cdc->businessName }}</option>
-                                @endif    
+                            @if($existSearchedCDC)
+                                <option <?php if ($cdc->id == $searchedCDC) echo "selected";?> value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
+                            @elseif($result)
+                                <option <?php if ($cdc->id == $result) echo "selected";?> value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
                             @else
                                 <option value="{{ $cdc->id }}">{{ $cdc->businessName }}</option>
                             @endif
                         @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-2">
+                    @php
+                        $result = old('contractStatus');
+                    @endphp
+                    <label for="contractStatus">Stato Contratto</label>
+                    <select name="contractStatus" class="form-control">
+                        @if($existcontractStatus)
+                            <option <?php if ($contractStatus == null) echo "selected";?> value="">Seleziona...</option>
+                            <option <?php if ($contractStatus == "Y") echo "selected";?> value="Y">Attivo</option>
+                            <option <?php if ($contractStatus == "N") echo "selected";?> value="N">Chiuso</option>
+                        @elseif($result)
+                            <option <?php if ($result == null) echo "selected";?> value="">Seleziona...</option>
+                            <option <?php if ($result == "Y") echo "selected";?> value="Y">Attivo</option>
+                            <option <?php if ($result == "N") echo "selected";?> value="N">Chiuso</option>
+                        @else
+                            <option value="">Seleziona...</option>
+                            <option value="Y">Attivo</option>
+                            <option value="N">Chiuso</option>
+                        @endif
                     </select>
                 </div>
                 <div class="form-group col-3">
@@ -111,6 +141,7 @@ $getParams = $_GET;
                 <input type="hidden" name="endingDR" value="{{ $endingDR ?? '' }}">
                 <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
                 <input type="hidden" name="searchedCDC" value="{{ $searchedCDC ?? '' }}">
+                <input type="hidden" name="contractStatus" value="{{ $contractStatus ?? '' }}">
                 <button type="submit" class="btn btn-info">Scarica dati</button>
             </form>
         </div>
@@ -118,15 +149,17 @@ $getParams = $_GET;
 @stop
 
 @section('content')
+    @if (Session::get('warning') == null)   
     <table class="table table-sm table-hover table-borderless mt-3">
         <caption style="caption-side: top;">Lista Ticket</caption>
         <thead class="thead-dark">
             <tr>
                 <th>Contratto</th>
+                <th>Stato</th>
                 <!-- <th>Aperto</th> -->
                 <th>Eseguito</th>
-                <th>Durata intervento</th>
-                <th>Ore Extra Admin</th>
+                <th>Durata int.</th>
+                <th>Ore Extra</th>
                 <!-- <th>Data Inizio</th> -->
                 <th>Data</th>
                 <th>Commenti</th>
@@ -135,11 +168,15 @@ $getParams = $_GET;
                 <th></th>
             </tr>
         </thead>
-        @if (Session::get('warning') == null)
         <tbody>
             @foreach($tickets as $ticket)
                 <tr>
                     <td>{{ $ticket->contract->name }}</td>
+                    @if($ticket->contract->active == 'Y')
+                        <td>Attivo</td>
+                    @else
+                        <td>Chiuso</td>
+                    @endif
                     <!-- <td>{{ $ticket->openBy }}</td> -->
                     <td>{{ $ticket->performedBy }}</td>
                     <td>{{ $ticket->workTime }}</td>
@@ -151,7 +188,7 @@ $getParams = $_GET;
                     @else
                         <td>{{ $ticket->comments }}</td>
                     @endif -->
-                    <td>{{ $ticket->comments }}</td>
+                    <td style="width: 30%;">{{ $ticket->comments }}</td>
                     @if(Auth::user()['name'] == $ticket->performedBy || Auth::user()['role'] == 'admin')
                         <td title="Modifica">
                             <a href="{{ route('tickets.edit', $ticket->id) }}">
@@ -196,11 +233,12 @@ $getParams = $_GET;
                 </tr>
             @endforeach
         </tbody>
-        @endif
     </table>
     {{ $tickets->appends(['contractN' => $contractN ?? "",
         'startingDR' => $startingDR ?? "",
         'endingDR' => $endingDR ?? "",
         'searchedC' => $searchedC ?? "",
-        'searchedCDC' => $searchedCDC ?? ""])->links() }}
+        'searchedCDC' => $searchedCDC ?? "",
+        'contractStatus' => $contractStatus ?? ""])->links() }}
+    @endif
 @stop

@@ -112,6 +112,7 @@ $existContractT = isset($contractT);
 @stop
 
 @section('content')
+    @if(Session::get('warning') == null)
     <table class="table table-sm table-hover table-borderless">
         <caption style="caption-side: top;">Lista Contratti</caption>
         <thead class="thead-dark">
@@ -229,4 +230,5 @@ $existContractT = isset($contractT);
         </tbody>
     </table>
     {{ $contracts->appends(['searchedC' => $searchedC ?? "", 'contractT' => $contractT ?? ""])->links() }}
+    @endif
 @stop

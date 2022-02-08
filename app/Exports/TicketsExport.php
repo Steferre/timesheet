@@ -13,8 +13,12 @@ class TicketsExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Società del gruppo', 'Azienda Cliente', 'Nome Contratto', 'Codice Contratto','ticketID',
-            'oreUser','oreExtraAdmin','ticket aperto da', 'intervento eseguito da'
+            'Azienda Cliente',
+            'Nome Contratto',
+            'Codice',
+            'ore intervento',
+            'oreExtra', 
+            'eseguito da'
         ];
     }
 
