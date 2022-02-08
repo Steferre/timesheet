@@ -33,12 +33,13 @@
 
             startDate.addEventListener('change', (e) => {
                 
-                if (e.target.value < today) {
+                /* if (e.target.value < today) {
                     alert("Attenzione, non puoi inserire come data d'inizio, una data già passata!!!");
                     e.target.value = null;
                 } else {
                     return selectedStartDate = e.target.value;
-                }
+                } */
+                return selectedStartDate = e.target.value;
 
             });
 

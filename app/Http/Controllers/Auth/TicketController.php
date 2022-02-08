@@ -323,9 +323,9 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        echo '<pre>';
+        /* echo '<pre>';
         var_dump($request->input());
-        echo '</pre>';
+        echo '</pre>'; */
         $request->validate([
             'start_date' => 'required|date|before_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
