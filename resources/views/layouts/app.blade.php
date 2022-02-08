@@ -63,10 +63,15 @@
                                 $arrayPath = explode('/', Request::path());
                             @endphp
                             @if (($arrayPath[0] === '') || ($arrayPath[0] === 'contracts') )
-                                <li class="nav-item">
-                                    <a href="{{ route('contracts.index') }}" class="nav-link text-danger">
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-danger" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         Contratti
                                     </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('contracts.indexConClose') }}">
+                                            Archivio
+                                        </a>
+                                    </div>
                                 </li>
                                 @if (Auth::user()['role'] == 'admin')
                                 <li class="nav-item" id="clients">
@@ -85,11 +90,47 @@
                                         Ticket
                                     </a>
                                 </li>
-                            @elseif ($arrayPath[0] === 'clients')
-                                <li class="nav-item">
-                                    <a href="{{ route('contracts.index') }}" class="nav-link">
-                                        Contratti
+                            @elseif ($arrayPath[0] === 'closedContracts')
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-danger" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Archivio
                                     </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('contracts.index') }}">
+                                            Contratti
+                                        </a>
+                                    </div>
+                                </li>
+                                @if (Auth::user()['role'] == 'admin')
+                                <li class="nav-item" id="clients">
+                                    <a href="{{ route('clients.index') }}" class="nav-link">
+                                        Aziende Clienti
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('cdcs.index') }}" class="nav-link">
+                                        Centri di costo
+                                    </a>
+                                </li>
+                                @endif
+                                <li class="nav-item" id="tickets">
+                                    <a href="{{ route('tickets.index') }}" class="nav-link">
+                                        Ticket
+                                    </a>
+                                </li>   
+                            @elseif ($arrayPath[0] === 'clients')
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Menù Contratti
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('contracts.index') }}">
+                                            Contratti
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('contracts.indexConClose') }}">
+                                            Archivio
+                                        </a>
+                                    </div>
                                 </li>
                                 @if (Auth::user()['role'] == 'admin')
                                 <li class="nav-item">
@@ -109,10 +150,18 @@
                                     </a>
                                 </li>
                             @elseif ($arrayPath[0] === 'tickets')
-                                <li class="nav-item">
-                                    <a href="{{ route('contracts.index') }}" class="nav-link">
-                                        Contratti
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Menù Contratti
                                     </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('contracts.index') }}">
+                                            Contratti
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('contracts.indexConClose') }}">
+                                            Archivio
+                                        </a>
+                                    </div>
                                 </li>
                                 @if (Auth::user()['role'] == 'admin')
                                 <li class="nav-item">
@@ -132,10 +181,18 @@
                                     </a>
                                 </li>
                             @elseif ($arrayPath[0] === 'cdcs')
-                                <li class="nav-item">
-                                    <a href="{{ route('contracts.index') }}" class="nav-link">
-                                        Contratti
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Menù Contratti
                                     </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('contracts.index') }}">
+                                            Contratti
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('contracts.indexConClose') }}">
+                                            Archivio
+                                        </a>
+                                    </div>
                                 </li>
                                 @if (Auth::user()['role'] == 'admin')
                                 <li class="nav-item">

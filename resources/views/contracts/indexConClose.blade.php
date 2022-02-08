@@ -22,19 +22,17 @@ $existContractT = isset($contractT);
 @stop    
 
 @section('headers')
-    <h1>Contratti</h1>
-    @if ($loggedUser['role'] == 'admin')
+    <h1>Archivio Contratti Chiusi</h1>
     <div class="d-flex">
         <div class="mr-3">
-            <a href="{{ route('contracts.create') }}" class="btn btn-primary" role="button">Crea nuovo contratto</a>
+            <a href="{{ route('contracts.index') }}" class="btn btn-primary" role="button">Contratti Attivi</a>
         </div>
     </div>
-    @endif
 @stop
 
 @section('filters')
     <div>
-        <form action="{{ route('contracts.index') }}" method="GET">
+        <form action="{{ route('contracts.indexConClose') }}" method="GET">
             @csrf
 
             <div class="form-row mt-5">
@@ -42,6 +40,7 @@ $existContractT = isset($contractT);
                     @php
                     $result = old('searchedC');
                     @endphp
+                    <!-- <label for="searchedC"></label> -->
                     <select name="searchedC" class="form-control">
                         <option value="">Seleziona l'Azienda Cliente</option>
                         @foreach($clients as $client)
@@ -93,7 +92,7 @@ $existContractT = isset($contractT);
                 </div>
                 <div class="form-group col-3">
                     <button type="submit" class="btn btn-primary ml-3">FILTRA</button>
-                    <a href="{{ route('contracts.index') }}" class="btn btn-secondary ml-3" role="button">ANNULLA FILTRO</a>
+                    <a href="{{ route('contracts.indexConClose') }}" class="btn btn-secondary ml-3" role="button">ANNULLA FILTRO</a>
                 </div>
                 <div class="offset-1"></div>
                 <div class="form-group col-2">
@@ -104,7 +103,7 @@ $existContractT = isset($contractT);
         <form action="{{ route('contracts.exportCON') }}" method="GET">
             @csrf
             <input type="hidden" name="searchedC" value="{{ $searchedC ?? '' }}">
-            <input type="hidden" name="contractS" value="Y">
+            <input type="hidden" name="contractS" value="N">
             <input type="hidden" name="contractT" value="{{ $contractT ?? '' }}">
             <button type="submit" class="btn btn-info">Scarica dati</button>
         </form>

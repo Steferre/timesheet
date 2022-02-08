@@ -1,4 +1,16 @@
 @extends('layouts.app')
+@php
+$query = null;
+if (isset($data['getParams'])){
+    $token = isset($data['getParams']['_token']) ? $data['getParams']['_token'] : null;
+    $searchedC = $data['getParams']['searchedC'];
+    $contractT = $data['getParams']['contractT'];
+    $page = isset($data['getParams']['page']) ? $data['getParams']['page'] : null;
+    $query= '?_token='. $token .'&searchedC='.$searchedC.'&contractT='.$contractT.'&page='.$page;
+} else {
+    $query;
+}
+@endphp
 
 @section('scripts')
 <script>
@@ -36,11 +48,19 @@
 @section('headers')
     <h1 class="text-center">Dettaglio Contratto</h1>
     <div class="d-flex justify-content-around py-2">
-        <div title="lista contratti">
-            <a href="{{ route('contracts.index') }}" class="btn btn-primary" role="button">
-                <i class="bi bi-box-arrow-left"></i>
-            </a>
-        </div>
+        @if($contract->active === 'Y')
+            <div title="lista contratti">
+                <a href="{{ route('contracts.index').$query }}" class="btn btn-primary" role="button">
+                    <i class="bi bi-box-arrow-left"></i>
+                </a>
+            </div>
+        @else
+            <div title="lista contratti">
+                <a href="{{ route('contracts.indexConClose').$query }}" class="btn btn-primary" role="button">
+                    <i class="bi bi-box-arrow-left"></i>
+                </a>
+            </div>
+        @endif
         @if (Auth::user()['role'] == 'admin')
             <div title="modifica">
                 <a href="{{ route('contracts.edit', $contract->id) }}" class="btn btn-primary" role="button">

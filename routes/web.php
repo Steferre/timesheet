@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\TicketController;
 // se non sono loggato mi manda al login
 // se la sessione è ancora valida mi fa entrare nell'app
 Route::get('/', [ContractController::class, 'index'])->middleware(['auth'])->name('contracts.index');
+Route::get('/closedContracts', [ContractController::class, 'indexConClose'])->middleware(['auth'])->name('contracts.indexConClose');
 Route::post('/contracts', [ContractController::class, 'store'])->middleware(['auth'])->name('contracts.store');
 Route::get('/contracts/create', [ContractController::class, 'create'])->middleware(['auth'])->name('contracts.create');
 Route::get('/contracts/exportCON', [ContractController::class, 'exportCON'])->middleware(['auth'])->name('contracts.exportCON');
