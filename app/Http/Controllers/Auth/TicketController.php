@@ -48,7 +48,7 @@ class TicketController extends Controller
 
                 /* foreach ($tickets as $ticket) {
                     echo '<pre>';
-                    var_dump($ticket['active']);
+                    var_dump($ticket->cdc->businessName);
                     echo '</pre>';
                 }
                 die(); */
@@ -774,7 +774,7 @@ class TicketController extends Controller
                             ->select('clients.businessName as Azienda Cliente',
                                     'contracts.name', 'contracts.uniCode',
                                     'tickets.workTime', 'tickets.extraTime',
-                                    'tickets.performedBy', 'cdcs.businessName');
+                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName');
             
         } else {// user normale
             $emailPath = explode('@', Auth::user()['email']);
@@ -788,7 +788,7 @@ class TicketController extends Controller
                             ->select('clients.businessName as Azienda Cliente', 
                                     'contracts.name', 'contracts.uniCode',
                                     'tickets.workTime', 'tickets.extraTime',
-                                    'tickets.performedBy', 'cdcs.businessName')
+                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
             
         }

@@ -163,6 +163,7 @@ $existcontractStatus = isset($contractStatus);
                 <!-- <th>Data Inizio</th> -->
                 <th>Data</th>
                 <th>Commenti</th>
+                <th>Cdc</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -188,7 +189,8 @@ $existcontractStatus = isset($contractStatus);
                     @else
                         <td>{{ $ticket->comments }}</td>
                     @endif -->
-                    <td style="width: 30%;">{{ $ticket->comments }}</td>
+                    <td style="width: 20%;">{{ $ticket->comments }}</td>
+                    <td>{{ $ticket->cdc->businessName }}</td>
                     @if(Auth::user()['name'] == $ticket->performedBy || Auth::user()['role'] == 'admin')
                         <td title="Modifica">
                             <a href="{{ route('tickets.edit', $ticket->id) }}">
