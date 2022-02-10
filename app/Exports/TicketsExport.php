@@ -14,11 +14,11 @@ class TicketsExport implements FromCollection, WithHeadings
     {
         return [
             'Azienda Cliente',
-            'Nome Contratto',
+            'Contratto',
             'Codice',
-            'ore intervento',
-            'oreExtra', 
-            'eseguito da'
+            'Eseguito da',
+            'Centro di costo', 
+            'Ore totali intervento'
         ];
     }
 

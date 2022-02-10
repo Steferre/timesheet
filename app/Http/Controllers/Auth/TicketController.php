@@ -773,7 +773,8 @@ class TicketController extends Controller
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                             ->select('clients.businessName as Azienda Cliente',
                                     'contracts.name', 'contracts.uniCode',
-                                    'tickets.workTime', 'tickets.extraTime', 'tickets.performedBy');
+                                    'tickets.workTime', 'tickets.extraTime',
+                                    'tickets.performedBy', 'cdcs.businessName');
             
         } else {// user normale
             $emailPath = explode('@', Auth::user()['email']);
@@ -786,7 +787,8 @@ class TicketController extends Controller
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                             ->select('clients.businessName as Azienda Cliente', 
                                     'contracts.name', 'contracts.uniCode',
-                                    'tickets.workTime', 'tickets.extraTime', 'tickets.performedBy')
+                                    'tickets.workTime', 'tickets.extraTime',
+                                    'tickets.performedBy', 'cdcs.businessName')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
             
         }
@@ -811,6 +813,12 @@ class TicketController extends Controller
         }
 
         $tickets = $tickets->get();
+
+        foreach ($tickets as $ticket) {
+            $ticket->totHours = ($ticket->workTime + $ticket->extraTime);
+            unset($ticket->workTime);
+            unset($ticket->extraTime);
+        }
 
         /* echo '<pre>';
         print_r($tickets);
