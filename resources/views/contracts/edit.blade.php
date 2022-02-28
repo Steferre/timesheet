@@ -1,9 +1,22 @@
 @extends('layouts.app')
 
+@php
+$query = null;
+if (isset($data['getParams'])){
+    $token = isset($data['getParams']['_token']) ? $data['getParams']['_token'] : null;
+    $searchedC = $data['getParams']['searchedC'];
+    $contractT = $data['getParams']['contractT'];
+    $page = isset($data['getParams']['page']) ? $data['getParams']['page'] : null;
+    $query= '?_token='. $token .'&searchedC='.$searchedC.'&contractT='.$contractT.'&page='.$page;
+} else {
+    $query;
+}
+@endphp
+
 @section('headers')
     <h1>Modifica contratto</h1>
     <div title="lista contratti">
-        <a href="{{ url()->previous() }}" class="btn btn-primary" role="button">
+        <a href="{{ route('contracts.index').$query }}" class="btn btn-primary" role="button">
             <i class="bi bi-box-arrow-left"></i>
         </a>
     </div>

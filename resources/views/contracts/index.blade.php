@@ -174,7 +174,7 @@ $existContractT = isset($contractT);
                     <td>{{ $contract->client->businessName }}</td>
                     @if($loggedUser['role'] == 'admin')
                         <td title="Modifica contratto">
-                            <a href="{{ route('contracts.edit', $contract->id) }}">
+                            <a href="{{ route('contracts.edit', ['id' => $contract->id, 'getParams' => $getParams]) }}">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
                         </td>

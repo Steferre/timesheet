@@ -633,13 +633,14 @@ class ContractController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $data = $request->all();
         $contract = Contract::findOrFail($id);
 
         if(Auth::user()['role'] == 'admin') {
 
-            return view('contracts.edit', ['contract' => $contract]);
+            return view('contracts.edit', ['contract' => $contract, 'data' => $data]);
 
         } else {
 
@@ -662,7 +663,7 @@ class ContractController extends Controller
             'name' => 'required',
             'uniCode' => 'required',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'nullable|date|after:start_date',
             'description' => 'nullable',
             'totHours' => 'nullable|numeric',
             'active' => 'required',
