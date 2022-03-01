@@ -44,7 +44,7 @@ class TicketController extends Controller
 
             if (count($dff) == 0) {
                 // filtri non settati
-                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')->paginate(10);
+                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')->paginate(30);
 
                 /* foreach ($tickets as $ticket) {
                     echo '<pre>';
@@ -95,7 +95,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.active', $contractStatus);
                 }
 
-                $tickets = $tickets->select('tickets.*')->paginate(10);
+                $tickets = $tickets->select('tickets.*')->paginate(30);
 
                 if (count($tickets) > 0) {
 
@@ -154,7 +154,7 @@ class TicketController extends Controller
                 
             if (count($dff) == 0) {
                 // ritorno tutti i ticket perchè nn ho filtri attivi
-                $tickets = $tickets->paginate(10);
+                $tickets = $tickets->paginate(30);
 
 
                 return view('tickets.index', [
@@ -192,7 +192,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.active', $contractStatus);
                 }
 
-                $tickets = $tickets->paginate(10);
+                $tickets = $tickets->paginate(30);
 
                 if (count($tickets) > 0) {
 

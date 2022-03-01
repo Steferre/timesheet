@@ -44,7 +44,7 @@ if (isset($data['getParams'])){
             </div>
             <div class="form-group col-4">
                 <label for="uniCode">Codice contratto</label>
-                <input type="text" name="uniCode" value="{{ $contract->uniCode }}" class="form-control">
+                <input type="text" name="uniCode" value="{{ $contract->uniCode }}" class="form-control" placeholder="opzionale">
             </div>
             <div class="form-group col-4">
                 <label for="client_id">Azienda Cliente</label>
@@ -66,10 +66,10 @@ if (isset($data['getParams'])){
                 <select name="active" id="active" class="form-control custom-select">
                     @if ($contract->active == 'Y')
                     <option value="Y" selected>Attivo</option>
-                    <option value="N">Non attivo</option>
+                    <option value="N">Chiuso</option>
                     @elseif ($contract->active == 'N')
                     <option value="Y">Attivo</option>
-                    <option value="N" selected>Non attivo</option>
+                    <option value="N" selected>Chiuso</option>
                     @endif
                 </select>
             </div>

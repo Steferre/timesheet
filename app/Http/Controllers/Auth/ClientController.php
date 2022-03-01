@@ -22,7 +22,7 @@ class ClientController extends Controller
 
         if(!isset($dff['searchedC'])) {
             // sono nella situazione in cui non c'è filtro o si filtra senza scrivere nulla
-            $clients = Client::paginate(10);
+            $clients = Client::orderBy('businessName')->paginate(20);
 
             return view('clients.index', ['clients' => $clients]); 
 
@@ -30,7 +30,7 @@ class ClientController extends Controller
             // ho attivato il filtro
             $query = $dff['searchedC'];
 
-            $clients = Client::select('*')->where('businessName', 'like', $query.'%')->paginate(10);
+            $clients = Client::select('*')->where('businessName', 'like', $query.'%')->orderBy('businessName')->paginate(20);
 
             if (count($clients) > 0) {
 

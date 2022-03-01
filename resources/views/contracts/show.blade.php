@@ -91,7 +91,11 @@ if (isset($data['getParams'])){
 @section('content')
     <div class="row mt-3">
         <div class="col-6 text-center">Nome contratto: <strong>{{ $contract->name }}</strong></div>
-        <div class="col-6 text-center">Codice contratto: <strong>{{ $contract->uniCode }}</strong></div>
+        @if($contract->uniCode)
+            <div class="col-6 text-center">Codice contratto: <strong>{{ $contract->uniCode }}</strong></div>
+        @else
+            <div class="col-6 text-center">Codice contratto: <strong> --- </strong></div>
+        @endif
     </div>
     <div class="row mt-3">
         <div class="col-4 text-center">Data apertura: <strong>{{ date('d-m-Y', strtotime($contract->start_date)) }}</strong></div>

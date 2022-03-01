@@ -106,7 +106,11 @@
             @foreach($client->contracts as $contract)
                 <tr>
                     <td>{{ $contract->name }}</td>
-                    <td>{{ $contract->uniCode }}</td>
+                    @if($contract->uniCode)
+                        <td>{{ $contract->uniCode }}</td>
+                    @else
+                        <td> --- </td>
+                    @endif
                     <td>{{ $contract->description }}</td>
                     <td>{{ $contract->totHours }}</td>
                     <td>{{ $contract->active }}</td>

@@ -41,7 +41,7 @@ class ContractController extends Controller
             if (count($dff) == 0) {
                 // faccio vedere tutto
                 // filtri non attivi
-                $contracts = Contract::where('contracts.active', 'Y')->paginate(10);
+                $contracts = Contract::where('contracts.active', 'Y')->orderBy('name')->paginate(20);
 
                 /* echo '<pre>';
                 print_r($contracts);
@@ -110,7 +110,8 @@ class ContractController extends Controller
                 }
 
                 $contracts = $contracts->where('contracts.active', 'Y');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
 
@@ -191,7 +192,8 @@ class ContractController extends Controller
                 // filtro non attivo 
                 // passo i contratti recuperati
                 $contracts = $contracts->where('contracts.active', 'Y');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
                 
@@ -242,7 +244,8 @@ class ContractController extends Controller
                 }
 
                 $contracts = $contracts->where('contracts.active', 'Y');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
 
@@ -312,7 +315,7 @@ class ContractController extends Controller
             if (count($dff) == 0) {
                 // faccio vedere tutto
                 // filtri non attivi
-                $contracts = Contract::where('contracts.active', 'N')->paginate(10);
+                $contracts = Contract::where('contracts.active', 'N')->orderBy('name')->paginate(20);
                 
                 $numContratti = count($contracts);
                 
@@ -372,7 +375,8 @@ class ContractController extends Controller
                 }
 
                 $contracts = $contracts->where('contracts.active', 'N');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
 
@@ -447,7 +451,8 @@ class ContractController extends Controller
                 // filtro non attivo 
                 // passo i contratti recuperati
                 $contracts = $contracts->where('contracts.active', 'N');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
                 
@@ -498,7 +503,8 @@ class ContractController extends Controller
                 }
 
                 $contracts = $contracts->where('contracts.active', 'N');
-                $contracts = $contracts->paginate(10);
+                $contracts = $contracts->orderBy('name');
+                $contracts = $contracts->paginate(20);
 
                 $numContratti = count($contracts);
 
@@ -573,7 +579,7 @@ class ContractController extends Controller
     {  
         $request->validate([
             'name' => 'required',
-            'uniCode' => 'required|unique:contracts,uniCode',
+            'uniCode' => 'nullable|unique:contracts,uniCode',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
             'description' => 'nullable',
@@ -661,7 +667,7 @@ class ContractController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'uniCode' => 'required',
+            'uniCode' => 'nullable',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
             'description' => 'nullable',
@@ -769,13 +775,13 @@ class ContractController extends Controller
             }
 
         }
-
+        $contracts = $contracts->orderBy('name');
         $contracts = $contracts->get();
-        echo '<pre>';
+        /* echo '<pre>';
         print_r($contracts);
         echo '</pre>';
 
-        die();
+        die(); */
 
         return Excel::download(new ContractsExport($contracts), 'contracts.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 

@@ -54,22 +54,7 @@ $existContractT = isset($contractT);
                         @endforeach
                     </select>
                 </div>
-                <!-- <div class="form-group col-3">
-                    @php
-                    $result = isset($contractS);
-                    @endphp
-                    <select name="contractS" class="form-control">
-                        @if(!$result)
-                            <option value="">Stato contratto</option>
-                            <option value="Y">Attivo</option>
-                            <option value="N">Non Attivo</option>
-                        @else
-                            <option <?php if ($contractS == null) echo "selected";?> value="">Stato contratto</option>
-                            <option <?php if ($contractS == "y") echo "selected";?> value="Y">Attivo</option>
-                            <option <?php if ($contractS == "n") echo "selected";?> value="N">Non Attivo</option>
-                        @endif    
-                    </select>
-                </div> -->
+                
                 <div class="form-group col-3">
                     @php
                         $result = old('contractT');
