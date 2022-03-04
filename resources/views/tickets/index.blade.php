@@ -183,7 +183,7 @@ $existcontractStatus = isset($contractStatus);
                     <td>{{ $ticket->workTime }}</td>
                     <td>{{ $ticket->extraTime }}</td>
                     <!-- <td>{{ date('d-m-Y', strtotime($ticket->start_date)) }}</td> -->
-                    <td>{{ date('d-m-Y', strtotime($ticket->end_date)) }}</td>
+                    <td>{{ date('d-m-Y', strtotime($ticket->tCloseDate)) }}</td>
                     <!-- @if(strlen($ticket->comments) > 11)
                         <td>{{ substr($ticket->comments, 0, 11). ' ' . '...' }}</td>
                     @else

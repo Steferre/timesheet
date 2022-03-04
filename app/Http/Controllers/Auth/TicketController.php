@@ -44,14 +44,22 @@ class TicketController extends Controller
 
             if (count($dff) == 0) {
                 // filtri non settati
-                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')->paginate(30);
+                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')
+                            ->select('tickets.id','tickets.start_date as tOpenDate','tickets.end_date as tCloseDate','tickets.workTime','tickets.extraTime',
+                            'tickets.comments','tickets.performedBy','tickets.openBy','tickets.contract_id','tickets.cdc_id',
+                            'contracts.name','contracts.start_date as cStartDate','contracts.end_date as cEndDate','contracts.description',
+                            'contracts.totHours','contracts.active','contracts.client_id','contracts.type')
+                            ->paginate(30);
 
                 /* foreach ($tickets as $ticket) {
                     echo '<pre>';
-                    var_dump($ticket->cdc->businessName);
+                    var_dump($ticket->);
                     echo '</pre>';
-                }
-                die(); */
+                }*/
+                /* echo '<pre>';
+                var_dump($tickets);
+                echo '</pre>';
+                die();  */
                 return view('tickets.index', [
                     'tickets' => $tickets,
                     'users' => $users,
@@ -74,7 +82,11 @@ class TicketController extends Controller
                 $searchedCDC = isset($dff['searchedCDC']) ? $dff['searchedCDC'] : null;
                 $contractStatus = isset($dff['contractStatus']) ? $dff['contractStatus'] : null;
                 
-                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id');
+                $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')
+                            ->select('tickets.id','tickets.start_date as tOpenDate','tickets.end_date as tCloseDate','tickets.workTime','tickets.extraTime',
+                            'tickets.comments','tickets.performedBy','tickets.openBy','tickets.contract_id','tickets.cdc_id',
+                            'contracts.name','contracts.start_date as cStartDate','contracts.end_date as cEndDate','contracts.description',
+                            'contracts.totHours','contracts.active','contracts.client_id','contracts.type');
 
                 if ($startingDR) {
                     $tickets = $tickets->where('tickets.end_date', '>=', $startingDR);
@@ -95,7 +107,12 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.active', $contractStatus);
                 }
 
-                $tickets = $tickets->select('tickets.*')->paginate(30);
+                $tickets = $tickets->paginate(30);
+
+                /* echo '<pre>';
+                var_dump($tickets);
+                echo '</pre>';
+                die();  */
 
                 if (count($tickets) > 0) {
 
@@ -149,12 +166,20 @@ class TicketController extends Controller
             // preparo la query di base per ottenere i ticket
             $tickets = Ticket::join('contracts', 'tickets.contract_id', '=', 'contracts.id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
-                            ->select('tickets.*')
+                            ->select('tickets.id','tickets.start_date as tOpenDate','tickets.end_date as tCloseDate','tickets.workTime','tickets.extraTime',
+                            'tickets.comments','tickets.performedBy','tickets.openBy','tickets.contract_id','tickets.cdc_id',
+                            'contracts.name','contracts.start_date as cStartDate','contracts.end_date as cEndDate','contracts.description',
+                            'contracts.totHours','contracts.active','contracts.client_id','contracts.type')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
                 
             if (count($dff) == 0) {
                 // ritorno tutti i ticket perchè nn ho filtri attivi
                 $tickets = $tickets->paginate(30);
+
+                /* echo '<pre>';
+                var_dump($clients);
+                echo '</pre>';
+                die(); */
 
 
                 return view('tickets.index', [
