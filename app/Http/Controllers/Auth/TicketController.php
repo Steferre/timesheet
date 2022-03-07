@@ -49,6 +49,7 @@ class TicketController extends Controller
                             'tickets.comments','tickets.performedBy','tickets.openBy','tickets.contract_id','tickets.cdc_id',
                             'contracts.name','contracts.start_date as cStartDate','contracts.end_date as cEndDate','contracts.description',
                             'contracts.totHours','contracts.active','contracts.client_id','contracts.type')
+                            ->orderBy('tickets.end_date', 'desc')
                             ->paginate(30);
 
                 /* foreach ($tickets as $ticket) {
@@ -107,6 +108,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.active', $contractStatus);
                 }
 
+                $tickets = $tickets->orderBy('tickets.end_date', 'desc');
                 $tickets = $tickets->paginate(30);
 
                 /* echo '<pre>';
@@ -174,6 +176,7 @@ class TicketController extends Controller
                 
             if (count($dff) == 0) {
                 // ritorno tutti i ticket perchè nn ho filtri attivi
+                $tickets = $tickets->orderBy('tickets.end_date', 'desc');
                 $tickets = $tickets->paginate(30);
 
                 /* echo '<pre>';
@@ -217,6 +220,7 @@ class TicketController extends Controller
                     $tickets = $tickets->where('contracts.active', $contractStatus);
                 }
 
+                $tickets = $tickets->orderBy('tickets.end_date', 'desc');
                 $tickets = $tickets->paginate(30);
 
                 if (count($tickets) > 0) {
@@ -747,13 +751,14 @@ class TicketController extends Controller
 
                 $ticket->delete();
 
-                return back()->with("success", "Il ticket è stato eliminato con successo e il contratto è stato riattivato");
+                return redirect('/tickets')->with("success", "Il ticket è stato eliminato con successo e il contratto è stato riattivato");
 
             } else {
 
                 $ticket->delete();
 
-                return back()->with("success", "Il ticket è stato eliminato con successo!");
+                return redirect('/tickets')->with("success", "Il ticket è stato eliminato con successo!");
+                //return back()->with("success", "Il ticket è stato eliminato con successo!");
             }
 
 
@@ -797,9 +802,8 @@ class TicketController extends Controller
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                             ->select('clients.businessName as Azienda Cliente',
-                                    'contracts.name', 'contracts.uniCode',
-                                    'tickets.workTime', 'tickets.extraTime',
-                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName');
+                                    'contracts.name', 'tickets.workTime', 'tickets.extraTime',
+                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName', 'tickets.end_date');
             
         } else {// user normale
             $emailPath = explode('@', Auth::user()['email']);
@@ -811,9 +815,8 @@ class TicketController extends Controller
                             ->join('clients', 'clients.id', '=', 'contracts.client_id')
                             ->join('tycoon_group_companies', 'tycoon_group_companies.id', '=', 'contracts.company_id')
                             ->select('clients.businessName as Azienda Cliente', 
-                                    'contracts.name', 'contracts.uniCode',
-                                    'tickets.workTime', 'tickets.extraTime',
-                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName')
+                                    'contracts.name', 'tickets.workTime', 'tickets.extraTime',
+                                    'tickets.performedBy', 'tickets.comments', 'cdcs.businessName', 'tickets.end_date')
                             ->where('tycoon_group_companies.website', 'like', '%'. $companyName .'%');
             
         }
@@ -837,10 +840,12 @@ class TicketController extends Controller
             $tickets = $tickets->where('contracts.active', $contractStatus);
         }
 
+        $tickets = $tickets->orderBy('tickets.end_date', 'desc');
         $tickets = $tickets->get();
 
         foreach ($tickets as $ticket) {
             $ticket->totHours = ($ticket->workTime + $ticket->extraTime);
+            $ticket->end_date = date('d/m/Y', strtotime($ticket->end_date));
             unset($ticket->workTime);
             unset($ticket->extraTime);
         }
