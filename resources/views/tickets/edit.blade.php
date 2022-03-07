@@ -59,6 +59,17 @@
                 <input type="text" name="comments" value="{{ $ticket->comments }}" class="form-control">
             </div> 
         </div>
+        @if(count($cdcs) > 0)
+        <div class="form-row">
+            <div class="mr-3">Centro di costo associato: </div>
+            @foreach($cdcs as $cdc)
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input <?php if ($ticket->cdc_id == $cdc->id) echo "checked";?> type="radio" class="custom-control-input" value="{{ $cdc->id }}" name="cdc_id" id="{{ $cdc->id }}">
+                    <label class="custom-control-label" for="{{ $cdc->id }}">{{ $cdc->businessName }}</label>
+                </div>
+            @endforeach
+        </div>
+        @endif
         <div class="form-group">
             <button type="submit" class="btn btn-primary mt-2">MODIFICA</button>
         </div>

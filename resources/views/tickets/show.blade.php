@@ -58,9 +58,10 @@ if (isset($data['getParams'])){
 
 @section('content')
     <div class="row mt-5">
-        <div class="col-4 text-center">Nome contratto: <strong>{{ $ticket->contract->name }}</strong></div>
-        <div class="col-4 text-center">Aperto da: <strong>{{ $ticket->openBy }}</strong></div>
-        <div class="col-4 text-center">Eseguito da: <strong>{{ $ticket->performedBy }}</strong></div>
+        <div class="col-3 text-center">Nome contratto: <strong>{{ $ticket->contract->name }}</strong></div>
+        <div class="col-3 text-center">Centro di costo: <strong>{{ $ticket->cdc->businessName }}</strong></div>
+        <div class="col-3 text-center">Aperto da: <strong>{{ $ticket->openBy }}</strong></div>
+        <div class="col-3 text-center">Eseguito da: <strong>{{ $ticket->performedBy }}</strong></div>
     </div>
     <div class="row mt-3">
         <div class="col-4 text-center">Ore intervento: <strong>{{ ($ticket->workTime + $ticket->extraTime) }}</strong></div>

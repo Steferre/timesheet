@@ -585,9 +585,17 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
 
+        $contract = $ticket->contract;
+
+        // trovo l'azienda cliente legata al contratto sul quale è stato aperto i ticket in modifica
+        $client = $contract->client;
+        
+        // devo trovare i cdc associati all'azienda del ticket aperto
+        $cdcs = $client->cdcs()->where('clientID', $client->id)->get();
+
         if ($ticket->performedBy == Auth::user()['name'] || Auth::user()['role'] == 'admin') {
 
-            return view('tickets.edit', ['ticket' => $ticket]);
+            return view('tickets.edit', ['ticket' => $ticket, 'cdcs' => $cdcs]);
 
         } else {
 
@@ -613,6 +621,7 @@ class TicketController extends Controller
             'extraTime' => 'required|numeric',
             'comments' => 'required',
             'contract_id' => 'required',
+            'cdc_id' => 'nullable'
         ]);
 
         $data = $request->all();
@@ -623,6 +632,17 @@ class TicketController extends Controller
         $savedTicketHours = ($ticket->workTime) + ($ticket->extraTime);
 
         $contract = $ticket->contract;
+
+        // trovo l'azienda cliente legata al contratto sul quale è stato aperto i ticket in modifica
+        $client = $contract->client;
+        
+        // devo trovare i cdc associati all'azienda del ticket aperto
+        $cdcs = $client->cdcs()->where('clientID', $client->id)->get();
+
+        /* echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+        die(); */
 
         // ore totali già usate
         // N.B. in queste ore ci sono anche le savedTicketHours
@@ -657,6 +677,17 @@ class TicketController extends Controller
     
         //PROBABILE PUNTO DI SEPARAZIONE TRA TIPO DI CONTRATTO
         if ($contract['type'] == 'decrease') {
+
+
+
+            /* echo '<pre>';
+            var_dump($ticket->contract);
+            echo '</pre>';
+            die(); */
+
+
+
+
             $remainingHours = $contract->totHours - $contract->hours;
 
             if ($remainingHours > $diffHours) {
