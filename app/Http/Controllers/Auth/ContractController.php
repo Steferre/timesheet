@@ -707,7 +707,7 @@ class ContractController extends Controller
             $contract->delete();
             return back()->with('success', 'Il contratto ' . $contract->name . ' è stato eliminato con successo!');
         } else {
-            return back()->with('warning', 'Attenzione! Il contratto ' . $contract->name . ' presenta dei ticket attivi! Non può essere eliminato.');
+            //return back()->with('warning', 'Attenzione! Il contratto ' . $contract->name . ' presenta dei ticket attivi! Non può essere eliminato.');
         }
 
     }
@@ -736,7 +736,7 @@ class ContractController extends Controller
                                     ->groupBy('contracts.id', 'contracts.name', 'contracts.uniCode',
                                     'contracts.start_date','contracts.end_date',
                                     'contracts.active', 'contracts.type',
-                                    'contracts.totHours', 'clients.businessName');                   
+                                    'contracts.totHours', 'contracts.description', 'clients.businessName');                   
 
         if (Auth::user()['role'] == 'admin') {
 

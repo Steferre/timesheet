@@ -145,11 +145,11 @@ if (isset($data['getParams'])){
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($contract->tickets as $ticket)
+                    @foreach($contract->tickets->sortByDesc('end_date') as $ticket)
                         <tr>
                             <td>{{ $ticket->id }}</td>
-                            <td>{{ $ticket->start_date }}</td>
-                            <td>{{ $ticket->end_date }}</td>
+                            <td>{{ date('d-m-Y', strtotime($ticket->start_date)) }}</td>
+                            <td>{{ date('d-m-Y', strtotime($ticket->end_date)) }}</td>
                             <td>{{ $ticket->workTime }}</td>
                             <td>{{ $ticket->extraTime }}</td>
                             <td style="width: 30%;">{{ $ticket->comments }}</td>

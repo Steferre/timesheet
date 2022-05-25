@@ -18,6 +18,28 @@ $existContractT = isset($contractT);
             event.preventDefault();
         }
     }
+    window.addEventListener('load', (event) => {
+        const infoBtn = document.getElementById("infoBtn");
+        const mesBox = document.getElementById("mesBox");
+
+        console.log(infoBtn);
+
+        infoBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            if(mesBox.style.opacity == 0) {
+                mesBox.style.opacity = 1;
+                mesBox.style.padding = '10px';
+                mesBox.style['max-height'] = '50px';
+                setTimeout(() => {
+                    mesBox.style.transition = 'all 2s linear';
+                    mesBox.style.opacity = 0;
+                    mesBox.style.padding = 0;
+                    mesBox.style['max-height'] = 0;
+                }, 1500);
+            } 
+        });
+    });
 </script>    
 @stop    
 
@@ -26,7 +48,7 @@ $existContractT = isset($contractT);
     @if ($loggedUser['role'] == 'admin')
     <div class="d-flex">
         <div class="mr-3">
-            <a href="{{ route('contracts.create') }}" class="btn btn-primary" role="button">Crea nuovo contratto</a>
+            <a href="{{ route('contracts.create') }}" class="btn btn-primary mb-3" role="button">Crea nuovo contratto</a>
         </div>
     </div>
     @endif
@@ -34,10 +56,11 @@ $existContractT = isset($contractT);
 
 @section('filters')
     <div>
+        <div id="mesBox" style="width: 100%; max-height: 0; padding: 0; border-top: 10px; background-color: #fffbdb; color: #857b26; opacity: 0;">Attenzione! Il contratto non può essere eliminato perchè sono già stati registrati dei ticket!</div>
         <form action="{{ route('contracts.index') }}" method="GET">
             @csrf
 
-            <div class="form-row mt-5">
+            <div class="form-row mt-3">
                 <div class="form-group col-3">
                     @php
                     $result = old('searchedC');
@@ -181,7 +204,7 @@ $existContractT = isset($contractT);
                             <form method="POST" action="{{ route('contracts.destroy', $contract->id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" id="deleteBtn" class="border-0 bg-transparent">
+                                <button id="infoBtn" class="border-0 bg-transparent">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </form>
