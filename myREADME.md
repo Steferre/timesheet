@@ -120,3 +120,7 @@ eliminare required da campo descrizione(FATTO)
 ## TO DO
 - mostrare ticket in ordine decrescente dall'ultimo creato
 - riguardare errore dovuto al codice del contratto
+
+
+## TO DO URGENTE 
+attivare il recupero della pwd per gli utenti
