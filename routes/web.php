@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\CdcController;
 use App\Http\Controllers\Auth\ClientController;
 use App\Http\Controllers\Auth\ContractController;
 use App\Http\Controllers\Auth\TicketController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+//use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +66,11 @@ Route::delete('/cdcs/{id}', [CdcController::class, 'destroy'])->middleware(['aut
 
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// ROTTE PER IL RECUPERO DELLA PASSWORD
+Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
+/* Route::get('myLogin', [LoginController::class, 'showLoginPage'])->name('login.custom.get');
+Route::post('myLogin', [LoginController::class, 'sendLoginForm'])->name('login.custom.post'); */
