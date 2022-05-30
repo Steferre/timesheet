@@ -8,11 +8,20 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
+                    @if(session('message'))
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            {{ session('message') }}
+                        </div>
+                    @endif  
                     @if ($errors->any())    
                         <div class="alert alert-danger">
                             <ul>
                                 @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
+                                    <li>
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        {{ $error }}
+                                    </li>
                                 @endforeach    
                             </ul>
                         </div>
@@ -36,7 +45,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -46,7 +55,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
@@ -54,11 +63,15 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
+                                <a class="btn btn-link" href="{{ route('forget.password.get') }}">
+                                    Reset Password
+                                </a>
+
+                                <!-- @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('forget.password.get') }}">
+                                        Reset Password
                                     </a>
-                                @endif
+                                @endif -->
                             </div>
                         </div>
                     </form>
