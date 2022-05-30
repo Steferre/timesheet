@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -37,4 +38,17 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /* public function showLoginPage()
+    {
+        return view('auth.login');
+    }
+
+    public function sendLoginForm(Request $request)
+    {
+        $data = $request->all();
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+    } */
 }
