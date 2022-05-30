@@ -352,9 +352,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        /* echo '<pre>';
-        var_dump($request->input());
-        echo '</pre>'; */
+        
         $request->validate([
             'start_date' => 'required|date|before_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
@@ -384,12 +382,14 @@ class TicketController extends Controller
         $contract->hours = DB::table('tickets')
                             ->where('tickets.contract_id', $contract->id)
                             ->sum(DB::raw('tickets.workTime + tickets.extraTime'));
+
         // recupero l'azienda cliente
         $client = $contract->client;
 
         // controlliamo se l'azienda cliente è già presente nella lista dei centri di costo
         $cdcRecordExist = Cdc::where('cdcs.businessName', 'like', '%'. $client->businessName .'%')
                             ->count('cdcs.businessName');
+        
                         
         // se non è presente la inserisco
         if ($cdcRecordExist == 0) {
@@ -397,7 +397,7 @@ class TicketController extends Controller
             // a questo punto la inserisco
             $cdc = new Cdc();
                         
-            $cdc['businessName'] = $client;
+            $cdc['businessName'] = $client->businessName;
                         
             $cdc->save();
         }
@@ -569,7 +569,7 @@ class TicketController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $data =  $request->all();
+        $data = $request->all();
         $ticket = Ticket::findOrFail($id);
  
         return view('tickets.show', ['ticket' => $ticket, 'data' => $data]);
