@@ -52,9 +52,14 @@ class RegisterController extends Controller
         /* echo '<pre>';
         print_r($data);
         echo '</pre>'; */
+        
         $emailDomain = explode('@', $data['email'])[1];
 
-        if($emailDomain !== 'keyos.it') {
+        /* echo '<pre>';
+        var_dump($emailDomain !== 'sysup.it');
+        echo '</pre>'; */
+        
+        if($emailDomain !== 'keyos.it' && $emailDomain !== 'sysup.it') {
             $data['email'] = 'not valid email';
         }
 
